@@ -7,6 +7,7 @@
     },
     "extends": "airbnb",
     "rules": {
+        "linebreak-style": "off",
         "import/no-extraneous-dependencies": [
             "error",
             {

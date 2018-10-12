@@ -1,4 +1,6 @@
+/* eslint-disable react/prop-types */
 import React from 'react';
+import { Board, Card } from './board';
 import './Game.css';
 
 function range(start, end, step = 1) {
@@ -33,19 +35,6 @@ function range(start, end, step = 1) {
     return Array.from(Array(length), (x, index) => start + index * step);
 }
 
-function Card(props) {
-    const {
-        onClick,
-        status,
-        value,
-    } = props;
-    return (
-        <button className="card" onClick={onClick}>
-            {status ? value : '?'}
-        </button>
-    );
-}
-
 const cardColorsSample = [
     ['b', 'r', 'w', 'w', 'b'],
     ['b', 'r', 'w', 'b', 'w'],
@@ -53,37 +42,6 @@ const cardColorsSample = [
     ['b', 'r', 'w', 'k', 'w'],
     ['b', 'r', 'w', 'w', 'w'],
 ];
-
-class Board extends React.Component {
-    renderCard(i) {
-        const {
-            words,
-            onClick,
-            squares,
-        } = this.props;
-        return (
-            <Card
-                value={words[i]}
-                key={i}
-                onClick={() => onClick(i)}
-                status={squares[i]}
-            />
-        );
-    }
-
-    render() {
-        const { cardIDs } = this.props;
-        return (
-            <div>
-                {cardIDs.map((row, i) => (
-                    <div className="board-row" key={i}>
-                        {row.map((card, j) => this.renderCard(i * 5 + j))}
-                    </div>
-                ))}
-            </div>
-        );
-    }
-}
 
 class Game extends React.Component {
     constructor(props) {
@@ -172,6 +130,7 @@ class Game extends React.Component {
                         cardIDs={cardIDs}
                         squares={current.squares}
                         onClick={i => this.handleClick(i)}
+                        cardColors={cardColors}
                     />
 
                 </div>

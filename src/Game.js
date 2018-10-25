@@ -1,6 +1,7 @@
 /* eslint-disable react/prop-types */
 import React from 'react';
-import { Board, Card } from './board';
+import { Board } from './board';
+import Modal from './modal';
 import './Game.css';
 
 function range(start, end, step = 1) {
@@ -54,93 +55,113 @@ class Game extends React.Component {
                 squares: Array(25).fill(false),
             }],
             stepNumber: 0,
+            modalShown: false,
         };
     }
 
-    handleClick(i) {
-        const {
-            history,
-            xIsNext,
-            stepNumber,
-        } = this.state;
-        const historySlice = history.slice(0, stepNumber + 1);
-        const current = historySlice[historySlice.length - 1];
-        const squares = current.squares.slice();
-        // if (calculateWinner(squares) || squares[i]) {
-        //   return;
-        // }
-        squares[i] = !squares[i];
+    showModal = () => {
+        this.setState({ modalShown: true });
+    };
 
-        this.setState({
-            xIsNext: !xIsNext,
-            history: historySlice.concat([{
-                squares,
-                whoMoved: xIsNext ? 'X' : 'O',
-                moveLocation: [Math.floor(i / 5), i % 5],
-            }]),
-            stepNumber: historySlice.length,
-        });
-    }
+  hideModal = () => {
+      this.setState({ modalShown: false });
+  };
 
-    // jumpTo(step) {
-    //   this.setState({
-    //     stepNumber: step,
-    //     xIsNext: (step % 2) === 0,
-    //   });
-    // }
+  handleClick(i) {
+      const {
+          history,
+          xIsNext,
+          stepNumber,
+      } = this.state;
+      const historySlice = history.slice(0, stepNumber + 1);
+      const current = historySlice[historySlice.length - 1];
+      const squares = current.squares.slice();
+      // if (calculateWinner(squares) || squares[i]) {
+      //   return;
+      // }
+      squares[i] = !squares[i];
 
-    render() {
-        const {
-            history,
-            words,
-            cardIDs,
-            cardColors,
-            stepNumber,
-        } = this.state;
-        const current = history[stepNumber];
-        // const winner = calculateWinner(current.squares);
+      this.setState({
+          xIsNext: !xIsNext,
+          history: historySlice.concat([{
+              squares,
+              whoMoved: xIsNext ? 'X' : 'O',
+              moveLocation: [Math.floor(i / 5), i % 5],
+          }]),
+          stepNumber: historySlice.length,
+      });
+  }
 
-        // const moves = history.map((step, move) => {
-        //   const desc = move ?
-        //      'Go to move #'+ move + ': ' + step.whoMoved + ' to (r,c) ' + step.moveLocation :
-        //      'Go to game start';
-        //   return (
-        //     <li key={move}>
-        //        {this.state.stepNumber == move ? (
-        //         <button onClick={() => this.jumpTo(move)}><b>{desc}</b></button>
-        //         ):
-        //        (<button onClick={() => this.jumpTo(move)}>{desc}</button>)
-        //        }
-        //     </li>
-        //   );
-        // });
+  // jumpTo(step) {
+  //   this.setState({
+  //     stepNumber: step,
+  //     xIsNext: (step % 2) === 0,
+  //   });
+  // }
 
-        // let status;
-        // if (winner) {
-        //   status = 'Winner: ' + winner;
-        // } else {
-        //   status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
-        // }
+  render() {
+      const {
+          history,
+          words,
+          cardIDs,
+          cardColors,
+          stepNumber,
+          modalShown,
+      } = this.state;
+      const current = history[stepNumber];
+      // const winner = calculateWinner(current.squares);
 
-        return (
-            <div className="game">
-                <div className="game-board">
-                    <Board
-                        words={words}
-                        cardIDs={cardIDs}
-                        squares={current.squares}
-                        onClick={i => this.handleClick(i)}
-                        cardColors={cardColors}
-                    />
+      // const moves = history.map((step, move) => {
+      //   const desc = move ?
+      //      'Go to move #'+ move + ': ' + step.whoMoved + ' to (r,c) ' + step.moveLocation :
+      //      'Go to game start';
+      //   return (
+      //     <li key={move}>
+      //        {this.state.stepNumber == move ? (
+      //         <button onClick={() => this.jumpTo(move)}><b>{desc}</b></button>
+      //         ):
+      //        (<button onClick={() => this.jumpTo(move)}>{desc}</button>)
+      //        }
+      //     </li>
+      //   );
+      // });
 
-                </div>
-                {/* <div className="game-info"> */}
-                {/* <div>{status}</div> */}
-                {/* <ol>{moves}</ol> */}
-                {/* </div> */}
-            </div>
-        );
-    }
+      // let status;
+      // if (winner) {
+      //   status = 'Winner: ' + winner;
+      // } else {
+      //   status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
+      // }
+
+      return (
+          <div>
+              <div className="game">
+                  <Board
+                      words={words}
+                      cardIDs={cardIDs}
+                      squares={current.squares}
+                      onClick={i => this.handleClick(i)}
+                      cardColors={cardColors}
+                  />
+
+                  {/* <div className="game-info"> */}
+                  {/* <div>{status}</div> */}
+                  {/* <ol>{moves}</ol> */}
+                  {/* </div> */}
+              </div>
+              <div>
+                  <button type="button" onClick={this.showModal}>
+          open
+                  </button>
+
+                  <Modal show={modalShown} handleClose={this.hideModal}>
+                      <p>Modal</p>
+                      <p>Data</p>
+                  </Modal>
+              </div>
+          </div>
+      );
+  }
 }
 
 export default Game;

@@ -1,3 +1,4 @@
+/* eslint-disable react/forbid-prop-types */
 import React from 'react';
 import PropTypes from 'prop-types';
 
@@ -8,7 +9,7 @@ function Card(props) {
         value,
     } = props;
     return (
-        <button className="card" onClick={onClick}>
+        <button type="button" className="card" onClick={onClick}>
             {status ? value : '?'}
         </button>
     );
@@ -56,4 +57,4 @@ Card.propTypes = {
     status: PropTypes.bool.isRequired,
     value: PropTypes.string.isRequired,
 };
-export { Board };
+export default Board;

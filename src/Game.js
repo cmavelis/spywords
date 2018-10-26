@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import React from 'react';
-import { Board } from './board';
+import Board from './board';
 import Modal from './modal';
 import './Game.css';
 
@@ -48,7 +48,7 @@ class Game extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            words: range(0, 24).map(i => `word${i}`),
+            words: range(0, 24).map(i => `word ${i}`),
             cardColors: cardColorsSample,
             cardIDs: [0, 1, 2, 3, 4].map(i => Array(5).fill(i)),
             history: [{
@@ -118,6 +118,8 @@ class Game extends React.Component {
             cardClicked,
         } = this.state;
         const current = history[stepNumber];
+        const squares = current.squares.slice();
+
         // const winner = calculateWinner(current.squares);
 
         // const moves = history.map((step, move) => {
@@ -160,18 +162,16 @@ class Game extends React.Component {
                     {/* </div> */}
                 </div>
                 <div>
-                    {/*<button type="button" onClick={this.showModal}>*/}
-                        {/*open*/}
-                    {/*</button>*/}
-
                     <Modal
                         show={modalShown}
                         handleClose={this.hideModal}
                         handleCardToggle={this.handleCardToggle}
                         cardClicked={cardClicked}
+                        wordClicked={words[cardClicked]}
                     >
-                        <p>Modal</p>
-                        <p>Data</p>
+                        <p>
+                            {squares[cardClicked] ? 'Hide card?' : 'Reveal card?'}
+                        </p>
                     </Modal>
                 </div>
             </div>

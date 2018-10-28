@@ -19,12 +19,16 @@ const Modal = ({
                         {wordClicked}
                     </b>
                 </p>
-                <button type="button" onClick={handleCardToggle}>
-                    Toggle
-                </button>
-                <button type="button" onClick={handleClose}>
-                    Close window
-                </button>
+                <div className="div-center">
+                    <button className="modal-button" type="button" onClick={handleCardToggle}>
+                        Toggle
+                    </button>
+                </div>
+                <div className="div-center">
+                    <button className="modal-button" type="button" onClick={handleClose}>
+                        Close window
+                    </button>
+                </div>
             </section>
         </div>
     );

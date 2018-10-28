@@ -12,19 +12,20 @@ p {
     text-align: center;
 }
 
+.board-row {
+    display: flex;
+}
+
 .board-row:after {
     /*clear: both;*/
     /*content: "";*/
     /*display: table;*/
 }
 
-.status {
-    margin-bottom: 10px;
-}
 
 .card {
     background: #ffe895;
-    border: 1px solid #999;
+    border: 6px solid #999;
     border-radius: 10px;
     /*float: left;*/
     font-size: 24px;
@@ -38,12 +39,39 @@ p {
     width: 200px;
 }
 
+.card-color-w {
+    background: darkslategray;
+    color: white;
+}
+
+.card-color-k {
+    background: black;
+    color: red;
+}
+
+.card-color-b {
+    background: blue;
+    color: white;
+}
+
+.card-color-r {
+    background: red;
+}
+
 .card:focus {
     outline: none;
 }
 
-.kbd-navigation .card:focus {
-    background: #9c9c9c;
+.display-block {
+    display: block;
+}
+
+.display-none {
+    display: none;
+}
+
+.div-center {
+    text-align: center;
 }
 
 .game {
@@ -56,12 +84,12 @@ p {
     margin: 0 auto;
 }
 
-.board-row {
-    display: flex;
-}
-
 .game-info {
     margin-left: 20px;
+}
+
+.kbd-navigation .card:focus {
+    background: #9c9c9c;
 }
 
 .modal {
@@ -73,12 +101,16 @@ p {
     background: rgba(0, 0, 0, 0.6);
 }
 
+.modal-button {
+    max-width: 100px;
+}
+
 .modal-main {
     position:fixed;
     background: #ffe895;
     border-radius: 10px;
     width: 20%;
-    height: auto;
+    height: 200px;
     top:20%;
     left:50%;
     transform: translate(-50%,-50%);
@@ -87,10 +119,6 @@ p {
     justify-content: center;
 }
 
-.display-block {
-    display: block;
-}
-
-.display-none {
-    display: none;
+.status {
+    margin-bottom: 10px;
 }

@@ -7,10 +7,12 @@ function Card(props) {
         onClick,
         status,
         value,
+        color,
     } = props;
+    const cls = 'card' + (status ? ' card-color-'+color : '');
     return (
-        <button type="button" className="card" onClick={onClick}>
-            {status ? value : '?'}
+        <button type="button" className={cls} onClick={onClick}>
+            {value}
         </button>
     );
 }
@@ -21,6 +23,7 @@ class Board extends React.Component {
             words,
             onClick,
             squares,
+            cardColors,
         } = this.props;
         return (
             <Card
@@ -28,6 +31,7 @@ class Board extends React.Component {
                 key={i}
                 onClick={() => onClick(i)}
                 status={squares[i]}
+                color={cardColors[Math.floor(i / 5)][i % 5]}
             />
         );
     }
@@ -51,10 +55,12 @@ Board.propTypes = {
     words: PropTypes.array.isRequired,
     squares: PropTypes.array.isRequired,
     cardIDs: PropTypes.array.isRequired,
+    cardColors: PropTypes.array.isRequired,
 };
 Card.propTypes = {
     onClick: PropTypes.func.isRequired,
     status: PropTypes.bool.isRequired,
     value: PropTypes.string.isRequired,
+    color: PropTypes.string.isRequired,
 };
 export default Board;

@@ -1,167 +1,169 @@
 /* eslint-disable react/prop-types */
+import _ from 'underscore';
 import React from 'react';
-import { Board } from './board';
+import Board from './board';
 import Modal from './modal';
 import './Game.css';
 
-function range(start, end, step = 1) {
-    // Test that the first 3 arguments are finite numbers.
-    // Using Array.prototype.every() and Number.isFinite().
-    const allNumbers = [start, end, step].every(Number.isFinite);
 
-    // Throw an error if any of the first 3 arguments is not a finite number.
-    if (!allNumbers) {
-        throw new TypeError('range() expects only finite numbers as arguments.');
-    }
-
-    // Ensure the step is always a positive number.
-    if (step <= 0) {
-        throw new Error('step must be a number greater than 0.');
-    }
-
-    // When the start number is greater than the end number,
-    // modify the step for decrementing instead of incrementing.
-    if (start > end) {
-        step = -step;
-    }
-
-    // Determine the length of the array to be returned.
-    // The length is incremented by 1 after Math.floor().
-    // This ensures that the end number is listed if it falls within the range.
-    const length = Math.floor(Math.abs((end - start) / step)) + 1;
-
-    // Fill up a new array with the range numbers
-    // using Array.from() with a mapping function.
-    // Finally, return the new array.
-    return Array.from(Array(length), (x, index) => start + index * step);
-}
-
-const cardColorsSample = [
+const cardColorsSample = _.flatten([
     ['b', 'r', 'w', 'w', 'b'],
     ['b', 'r', 'w', 'b', 'w'],
     ['b', 'r', 'w', 'r', 'w'],
     ['b', 'r', 'w', 'k', 'w'],
     ['b', 'r', 'w', 'w', 'w'],
-];
+]);
 
 class Game extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            words: range(0, 24).map(i => `word${i}`),
+            words: _.range(0, 25).map(i => `word ${i}`),
             cardColors: cardColorsSample,
             cardIDs: [0, 1, 2, 3, 4].map(i => Array(5).fill(i)),
             history: [{
                 squares: Array(25).fill(false),
             }],
+            xIsNext: true,
             stepNumber: 0,
             modalShown: false,
+            cardClicked: null,
         };
     }
 
-    showModal = () => {
-        this.setState({ modalShown: true });
+    showModal = (cardID) => {
+        this.setState({
+            modalShown: true,
+            cardClicked: cardID,
+        });
     };
 
-  hideModal = () => {
-      this.setState({ modalShown: false });
-  };
+    hideModal = () => {
+        this.setState({ modalShown: false });
+    };
 
-  handleClick(i) {
-      const {
-          history,
-          xIsNext,
-          stepNumber,
-      } = this.state;
-      const historySlice = history.slice(0, stepNumber + 1);
-      const current = historySlice[historySlice.length - 1];
-      const squares = current.squares.slice();
-      // if (calculateWinner(squares) || squares[i]) {
-      //   return;
-      // }
-      squares[i] = !squares[i];
+    handleCardToggle = () => {
+        const {
+            history,
+            xIsNext,
+            stepNumber,
+            cardClicked,
+            cardColors,
+        } = this.state;
+        const historySlice = history.slice(0, stepNumber + 1);
+        const current = historySlice[historySlice.length - 1];
+        const squares = current.squares.slice();
+        // if (calculateWinner(squares) || squares[i]) {
+        //   return;
+        // }
+        squares[cardClicked] = !squares[cardClicked];
 
-      this.setState({
-          xIsNext: !xIsNext,
-          history: historySlice.concat([{
-              squares,
-              whoMoved: xIsNext ? 'X' : 'O',
-              moveLocation: [Math.floor(i / 5), i % 5],
-          }]),
-          stepNumber: historySlice.length,
-      });
-  }
+        const counts = _.countBy(cardColors.filter((cc, i) => squares[i]));
 
-  // jumpTo(step) {
-  //   this.setState({
-  //     stepNumber: step,
-  //     xIsNext: (step % 2) === 0,
-  //   });
-  // }
+        this.setState({
+            xIsNext: !xIsNext,
+            history: historySlice.concat([{
+                squares,
+                whoMoved: xIsNext ? 'X' : 'O',
+                moveLocation: [Math.floor(cardClicked / 5), cardClicked % 5],
+            }]),
+            stepNumber: historySlice.length,
+            counts,
+        });
 
-  render() {
-      const {
-          history,
-          words,
-          cardIDs,
-          cardColors,
-          stepNumber,
-          modalShown,
-      } = this.state;
-      const current = history[stepNumber];
-      // const winner = calculateWinner(current.squares);
+        this.hideModal();
+    };
 
-      // const moves = history.map((step, move) => {
-      //   const desc = move ?
-      //      'Go to move #'+ move + ': ' + step.whoMoved + ' to (r,c) ' + step.moveLocation :
-      //      'Go to game start';
-      //   return (
-      //     <li key={move}>
-      //        {this.state.stepNumber == move ? (
-      //         <button onClick={() => this.jumpTo(move)}><b>{desc}</b></button>
-      //         ):
-      //        (<button onClick={() => this.jumpTo(move)}>{desc}</button>)
-      //        }
-      //     </li>
-      //   );
-      // });
+    // jumpTo(step) {
+    //   this.setState({
+    //     stepNumber: step,
+    //     xIsNext: (step % 2) === 0,
+    //   });
+    // }
 
-      // let status;
-      // if (winner) {
-      //   status = 'Winner: ' + winner;
-      // } else {
-      //   status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
-      // }
+    render() {
+        const {
+            history,
+            words,
+            cardIDs,
+            cardColors,
+            stepNumber,
+            modalShown,
+            cardClicked,
+            counts,
+        } = this.state;
+        const current = history[stepNumber];
+        const squares = current.squares.slice();
 
-      return (
-          <div>
-              <div className="game">
-                  <Board
-                      words={words}
-                      cardIDs={cardIDs}
-                      squares={current.squares}
-                      onClick={i => this.handleClick(i)}
-                      cardColors={cardColors}
-                  />
+        // const winner = calculateWinner(current.squares);
 
-                  {/* <div className="game-info"> */}
-                  {/* <div>{status}</div> */}
-                  {/* <ol>{moves}</ol> */}
-                  {/* </div> */}
-              </div>
-              <div>
-                  <button type="button" onClick={this.showModal}>
-          open
-                  </button>
+        // const moves = history.map((step, move) => {
+        //   const desc = move ?
+        //      'Go to move #'+ move + ': ' + step.whoMoved + ' to (r,c) ' + step.moveLocation :
+        //      'Go to game start';
+        //   return (
+        //     <li key={move}>
+        //        {this.state.stepNumber == move ? (
+        //         <button onClick={() => this.jumpTo(move)}><b>{desc}</b></button>
+        //         ):
+        //        (<button onClick={() => this.jumpTo(move)}>{desc}</button>)
+        //        }
+        //     </li>
+        //   );
+        // });
 
-                  <Modal show={modalShown} handleClose={this.hideModal}>
-                      <p>Modal</p>
-                      <p>Data</p>
-                  </Modal>
-              </div>
-          </div>
-      );
-  }
+        // let status;
+        // if (winner) {
+        //   status = 'Winner: ' + winner;
+        // } else {
+        //   status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
+        // }
+
+        return (
+            <div>
+                <div className="game">
+                    <Board
+                        words={words}
+                        cardIDs={cardIDs}
+                        squares={current.squares}
+                        onClick={this.showModal}
+                        modalClick={this.handleCardToggle}
+                        cardColors={cardColors}
+                    />
+
+                    {/* <div className="game-info"> */}
+                    {/* <div>{status}</div> */}
+                    {/* <ol>{moves}</ol> */}
+                    {/* </div> */}
+                    <div className="board-row">
+                        <div className="card">
+                            Red cards shown:
+                            {' '}
+                            {counts ? counts.r : 0}
+                        </div>
+                        <div className="card">
+                            Blue cards shown:
+                            {' '}
+                            {counts ? counts.b : 0}
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <Modal
+                        show={modalShown}
+                        handleClose={this.hideModal}
+                        handleCardToggle={this.handleCardToggle}
+                        cardClicked={cardClicked}
+                        wordClicked={words[cardClicked]}
+                    >
+                        <p>
+                            {squares[cardClicked] ? 'Hide card?' : 'Reveal card?'}
+                        </p>
+                    </Modal>
+                </div>
+            </div>
+        );
+    }
 }
 
 export default Game;

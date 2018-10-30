@@ -31,7 +31,8 @@ class Board extends React.Component {
                 key={i}
                 onClick={() => onClick(i)}
                 status={squares[i]}
-                color={cardColors[Math.floor(i / 5)][i % 5]}
+                color={cardColors[i]}
+                // color={cardColors[Math.floor(i / 5)][i % 5]}
             />
         );
     }

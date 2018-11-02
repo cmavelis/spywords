@@ -6,6 +6,7 @@
   "dependencies": {
     "merge": "^1.2.1",
     "npm": "^6.4.1",
+    "papaparse": "^4.6.1",
     "prop-types": "^15.6.2",
     "react": "^16.6.0",
     "react-dom": "^16.6.0",
@@ -27,6 +28,7 @@
     "eslint-plugin-jsx-a11y": "^6.1.2",
     "eslint-plugin-react": "^7.11.1",
     "gh-pages": "^2.0.1",
+    "seedrandom": "^2.4.4",
     "underscore": "^1.9.1"
   }
 }

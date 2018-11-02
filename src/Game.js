@@ -4,7 +4,27 @@ import React from 'react';
 import Board from './board';
 import Modal from './modal';
 import './Game.css';
+import 'seedrandom';
+// import Papa from 'papaparse';
+//
+// const wordFile = File('./words_simple.txt');
 
+// const words = Papa.parse(wordFile);
+
+const wordList = _.range(0, 100).map(i => `word ${i}`);
+
+console.log(wordList);
+
+for (let i = 0; i < 25; i++) {
+    console.log(wordList[Math.floor(Math.random() * wordList.length)]);
+}
+
+const numberOfWords = wordList.length;
+Math.seedrandom(100);
+
+let wordsSelected = [];
+_.range(0, 25).map(i => wordsSelected[i] = wordList[Math.floor(Math.random() * numberOfWords)]);
+console.log(wordsSelected);
 
 const cardColorsSample = _.flatten([
     ['b', 'r', 'w', 'w', 'b'],
@@ -18,7 +38,7 @@ class Game extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            words: _.range(0, 25).map(i => `word ${i}`),
+            words: wordsSelected,
             cardColors: cardColorsSample,
             cardIDs: [0, 1, 2, 3, 4].map(i => Array(5).fill(i)),
             history: [{

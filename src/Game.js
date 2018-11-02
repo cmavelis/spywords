@@ -1,8 +1,8 @@
 /* eslint-disable react/prop-types */
 import _ from 'underscore';
 import React from 'react';
-import Board from './board';
-import Modal from './modal';
+import Board from './components/board';
+import Modal from './components/modal';
 import './Game.css';
 import 'seedrandom';
 // import Papa from 'papaparse';
@@ -22,7 +22,8 @@ for (let i = 0; i < 25; i++) {
 const numberOfWords = wordList.length;
 Math.seedrandom(100);
 
-let wordsSelected = [];
+const wordsSelected = [];
+// dumb way to do this
 _.range(0, 25).map(i => wordsSelected[i] = wordList[Math.floor(Math.random() * numberOfWords)]);
 console.log(wordsSelected);
 
@@ -50,6 +51,12 @@ class Game extends React.Component {
             cardClicked: null,
         };
     }
+
+    // componentDidMount() {
+    //     const { cardColors, history } = this.state;
+    //     this.setState({ startingCount: _.countBy(cardColors),
+    // });
+    //     }
 
     showModal = (cardID) => {
         this.setState({
@@ -107,6 +114,7 @@ class Game extends React.Component {
             words,
             cardIDs,
             cardColors,
+            // startingCount,
             stepNumber,
             modalShown,
             cardClicked,
@@ -159,12 +167,22 @@ class Game extends React.Component {
                         <div className="card">
                             Red cards shown:
                             {' '}
-                            {counts ? counts.r : 0}
+                            {counts && counts.r ? counts.r : 0}
+                        </div>
+                        <div className="card">
+                            Red cards to start:
+                            {' '}
+                            {_.countBy(cardColors).r}
+                        </div>
+                        <div className="card">
+                            Red cards remaining:
+                            {' '}
+                            {counts && counts.r ? _.countBy(cardColors).r - counts.r : _.countBy(cardColors).r}
                         </div>
                         <div className="card">
                             Blue cards shown:
                             {' '}
-                            {counts ? counts.b : 0}
+                            {counts && counts.b ? counts.b : 0}
                         </div>
                     </div>
                 </div>

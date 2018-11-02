@@ -32,7 +32,6 @@ class Board extends React.Component {
                 onClick={() => onClick(i)}
                 status={squares[i]}
                 color={cardColors[i]}
-                // color={cardColors[Math.floor(i / 5)][i % 5]}
             />
         );
     }

@@ -41,7 +41,7 @@ p {
 }
 
 .card-color-w {
-    background: darkslategray;
+    background: gray;
     color: white;
 }
 
@@ -61,6 +61,16 @@ p {
 
 .card:focus {
     outline: none;
+}
+
+.counter-red {
+    background: #db5a69;
+    border-width: 1px
+}
+
+.counter-blue {
+    background: #5bafd9;
+    border-width: 1px
 }
 
 .display-block {

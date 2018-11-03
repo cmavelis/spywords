@@ -24,7 +24,7 @@ const wordsSelected = [];
 let wordToAdd = '';
 while (wordsSelected.length < 25) {
     wordToAdd = wordList[Math.floor(Math.random() * numberOfWords)];
-    if (wordsSelected.includes(wordToAdd)) wordsSelected.push(wordToAdd);
+    if (!wordsSelected.includes(wordToAdd)) wordsSelected.push(wordToAdd);
 }
 
 // hard-coded cardColors grid
@@ -166,27 +166,19 @@ class Game extends React.Component {
                     {/* <ol>{moves}</ol> */}
                     {/* </div> */}
                     <div className="board-row">
-                        <div className="card">
-                            Red cards shown:
-                            {' '}
-                            {counts && counts.r ? counts.r : 0}
-                        </div>
-                        <div className="card">
-                            Red cards to start:
-                            {' '}
-                            {_.countBy(cardColors).r}
-                        </div>
-                        <div className="card">
+                        <div className="card counter-red">
                             Red cards remaining:
                             {' '}
                             {counts && counts.r
                                 ? _.countBy(cardColors).r - counts.r
                                 : _.countBy(cardColors).r}
                         </div>
-                        <div className="card">
-                            Blue cards shown:
+                        <div className="card counter-blue">
+                            Blue cards remaining:
                             {' '}
-                            {counts && counts.b ? counts.b : 0}
+                            {counts && counts.b
+                                ? _.countBy(cardColors).b - counts.b
+                                : _.countBy(cardColors).b}
                         </div>
                     </div>
                 </div>

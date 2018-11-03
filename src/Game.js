@@ -11,28 +11,30 @@ import 'seedrandom';
 
 // const words = Papa.parse(wordFile);
 
+// generate placeholder words
 const wordList = _.range(0, 100).map(i => `word ${i}`);
 
-console.log(wordList);
-
-for (let i = 0; i < 25; i++) {
-    console.log(wordList[Math.floor(Math.random() * wordList.length)]);
-}
-
 const numberOfWords = wordList.length;
+
+// random seed hard-coded for now
 Math.seedrandom(100);
 
+// select sample of words using seed, ignoring repeats
 const wordsSelected = [];
-// dumb way to do this
-_.range(0, 25).map(i => wordsSelected[i] = wordList[Math.floor(Math.random() * numberOfWords)]);
-console.log(wordsSelected);
+let wordToAdd = '';
+while (wordsSelected.length < 25) {
+    wordToAdd = wordList[Math.floor(Math.random() * numberOfWords)];
+    if (wordsSelected.includes(wordToAdd)) wordsSelected.push(wordToAdd);
+}
 
+// hard-coded cardColors grid
+// 9 for 1st team, 8 for 2nd team
 const cardColorsSample = _.flatten([
     ['b', 'r', 'w', 'w', 'b'],
-    ['b', 'r', 'w', 'b', 'w'],
-    ['b', 'r', 'w', 'r', 'w'],
+    ['b', 'r', 'w', 'b', 'b'],
+    ['b', 'r', 'r', 'r', 'w'],
     ['b', 'r', 'w', 'k', 'w'],
-    ['b', 'r', 'w', 'w', 'w'],
+    ['b', 'r', 'w', 'r', 'b'],
 ]);
 
 class Game extends React.Component {
@@ -177,7 +179,9 @@ class Game extends React.Component {
                         <div className="card">
                             Red cards remaining:
                             {' '}
-                            {counts && counts.r ? _.countBy(cardColors).r - counts.r : _.countBy(cardColors).r}
+                            {counts && counts.r
+                                ? _.countBy(cardColors).r - counts.r
+                                : _.countBy(cardColors).r}
                         </div>
                         <div className="card">
                             Blue cards shown:

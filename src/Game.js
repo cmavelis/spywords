@@ -16,17 +16,6 @@ const wordList = _.range(0, 100).map(i => `word ${i}`);
 
 const numberOfWords = wordList.length;
 
-// random seed hard-coded for now
-Math.seedrandom(100);
-
-// select sample of words using seed, ignoring repeats
-const wordsSelected = [];
-let wordToAdd = '';
-while (wordsSelected.length < 25) {
-    wordToAdd = wordList[Math.floor(Math.random() * numberOfWords)];
-    if (!wordsSelected.includes(wordToAdd)) wordsSelected.push(wordToAdd);
-}
-
 // hard-coded cardColors grid
 // 9 for 1st team, 8 for 2nd team
 const cardColorsSample = _.flatten([
@@ -41,7 +30,7 @@ class Game extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            words: wordsSelected,
+            words: Array(25).fill(''),
             cardColors: cardColorsSample,
             cardIDs: [0, 1, 2, 3, 4].map(i => Array(5).fill(i)),
             history: [{
@@ -51,6 +40,7 @@ class Game extends React.Component {
             stepNumber: 0,
             modalShown: false,
             cardClicked: null,
+            randomSeedInput: 1,
         };
     }
 
@@ -103,6 +93,25 @@ class Game extends React.Component {
         this.hideModal();
     };
 
+    handleInputChange = (e) => {
+        const { name, value } = e.target;
+        this.setState({ [name]: value });
+    };
+
+    seedNewWords = () => {
+        const { randomSeedInput } = this.state;
+        Math.seedrandom(randomSeedInput);
+
+        // select sample of words using seed, ignoring repeats
+        const wordsSelected = [];
+        let wordToAdd = '';
+        while (wordsSelected.length < 25) {
+            wordToAdd = wordList[Math.floor(Math.random() * numberOfWords)];
+            if (!wordsSelected.includes(wordToAdd)) wordsSelected.push(wordToAdd);
+        }
+        this.setState({ words: wordsSelected });
+    };
+
     // jumpTo(step) {
     //   this.setState({
     //     stepNumber: step,
@@ -121,6 +130,7 @@ class Game extends React.Component {
             modalShown,
             cardClicked,
             counts,
+            randomSeed,
         } = this.state;
         const current = history[stepNumber];
         const squares = current.squares.slice();
@@ -152,12 +162,22 @@ class Game extends React.Component {
         return (
             <div>
                 <div className="game">
+                    {/* make header its own container */}
                     <header>
                         <p>Random seed</p>
-                        <input className="input-elements"
-
+                        <input
+                            name="randomSeedInput"
+                            value={randomSeed}
+                            className="input-elements"
+                            onChange={this.handleInputChange}
                         />
-                        <button type="button" className="input-elements">Refresh</button>
+                        <button
+                            type="button"
+                            className="input-elements"
+                            onClick={this.seedNewWords}
+                        >
+                            Refresh
+                        </button>
                     </header>
                     <Board
                         words={words}

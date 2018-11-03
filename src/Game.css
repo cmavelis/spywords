@@ -4,6 +4,14 @@ body {
     background: darkslategray;
 }
 
+header {
+    background: #ffe895;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
 ol, ul {
     padding-left: 30px;
 }
@@ -89,6 +97,7 @@ p {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    align-items: center;
 }
 
 .game-board {
@@ -99,6 +108,12 @@ p {
 
 .game-info {
     margin-left: 20px;
+}
+
+.input-elements {
+    margin: 0.5rem;
+    width: 75%;
+    align-self: center;
 }
 
 .kbd-navigation .card:focus {

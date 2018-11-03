@@ -1,8 +1,8 @@
 /* eslint-disable react/prop-types */
 import _ from 'underscore';
 import React from 'react';
-import Board from './components/board';
-import Modal from './components/modal';
+import Board from './components/Board';
+import Modal from './components/Modal';
 import './Game.css';
 import 'seedrandom';
 // import Papa from 'papaparse';
@@ -152,6 +152,13 @@ class Game extends React.Component {
         return (
             <div>
                 <div className="game">
+                    <header>
+                        <p>Random seed</p>
+                        <input className="input-elements"
+
+                        />
+                        <button type="button" className="input-elements">Refresh</button>
+                    </header>
                     <Board
                         words={words}
                         cardIDs={cardIDs}

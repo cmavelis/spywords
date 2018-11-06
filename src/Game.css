@@ -1,11 +1,18 @@
+:root {
+  --main-bg-color: darkslategray;
+    --palette-red: #db5a69;
+    --palette-blue: #5bafd9;
+    --card-bg-color: #ffe895;
+}
+
 body {
     font: 14px "Century Gothic", Futura, sans-serif;
     margin: 20px;
-    background: darkslategray;
+    background: var(--main-bg-color);
 }
 
 header {
-    background: #ffe895;
+    background: var(--card-bg-color);
     border-radius: 10px;
     display: flex;
     flex-direction: column;
@@ -33,7 +40,7 @@ p {
 
 
 .card {
-    background: #ffe895;
+    background: var(--card-bg-color);
     border: 6px solid #999;
     border-radius: 10px;
     /*float: left;*/
@@ -55,16 +62,16 @@ p {
 
 .card-color-k {
     background: black;
-    color: red;
+    color: var(--palette-red);
 }
 
 .card-color-b {
-    background: blue;
+    background: var(--palette-blue);
     color: white;
 }
 
 .card-color-r {
-    background: red;
+    background: var(--palette-red);
 }
 
 .card:focus {
@@ -72,12 +79,12 @@ p {
 }
 
 .counter-red {
-    background: #db5a69;
+    background: var(--palette-red);
     border-width: 1px
 }
 
 .counter-blue {
-    background: #5bafd9;
+    background: var(--palette-blue);
     border-width: 1px
 }
 
@@ -135,7 +142,7 @@ p {
 
 .modal-main {
     position:fixed;
-    background: #ffe895;
+    background: var(--card-bg-color);
     border-radius: 10px;
     width: 20%;
     height: 200px;

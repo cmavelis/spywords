@@ -24,7 +24,7 @@ xhr.send(null);
 // generate placeholder words
 const wordList = wordsReceived.split(/\r?\n/);
 
-const numberOfWords = wordList.length;
+const numberOfWords = wordList.length - 1;
 
 // hard-coded cardColors grid
 // 9 for 1st team, 8 for 2nd team

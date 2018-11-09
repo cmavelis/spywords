@@ -6,6 +6,7 @@ import Modal from './components/Modal';
 import './Game.css';
 import 'seedrandom';
 
+
 const wordFile = 'words_simple.csv';
 let wordsReceived = '';
 const xhr = new XMLHttpRequest();
@@ -18,7 +19,6 @@ xhr.onload = () => {
         }
     }
 };
-
 xhr.send(null);
 
 // generate placeholder words
@@ -28,6 +28,7 @@ const numberOfWords = wordList.length - 1;
 
 // hard-coded cardColors grid
 // 9 for 1st team, 8 for 2nd team
+// 1 death, 7 neutral
 const cardColorsSample = _.flatten([
     ['b', 'r', 'w', 'w', 'b'],
     ['b', 'r', 'w', 'b', 'b'],

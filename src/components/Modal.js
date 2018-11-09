@@ -38,13 +38,14 @@ Modal.propTypes = {
     handleCardToggle: PropTypes.func.isRequired,
     handleClose: PropTypes.func.isRequired,
     show: PropTypes.bool,
-    wordClicked: PropTypes.string.isRequired,
+    wordClicked: PropTypes.string,
     children: PropTypes.node,
 };
 
 Modal.defaultProps = {
     show: false,
     children: null,
+    wordClicked: 'ERROR',
 };
 
 export default Modal;

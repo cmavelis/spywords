@@ -40,15 +40,13 @@ class Game extends React.Component {
             stepNumber: 0,
             modalShown: false,
             cardClicked: null,
-            randomSeedInput: 1,
+            randomSeedWords: 1,
         };
     }
 
-    // componentDidMount() {
-    //     const { cardColors, history } = this.state;
-    //     this.setState({ startingCount: _.countBy(cardColors),
-    // });
-    //     }
+    componentDidMount() {
+        this.seedNewWords();
+    }
 
     showModal = (cardID) => {
         this.setState({
@@ -99,8 +97,8 @@ class Game extends React.Component {
     };
 
     seedNewWords = () => {
-        const { randomSeedInput } = this.state;
-        Math.seedrandom(randomSeedInput);
+        const { randomSeedWords } = this.state;
+        Math.seedrandom(randomSeedWords);
 
         // select sample of words using seed, ignoring repeats
         const wordsSelected = [];
@@ -130,7 +128,7 @@ class Game extends React.Component {
             modalShown,
             cardClicked,
             counts,
-            randomSeed,
+            randomSeedWords,
         } = this.state;
         const current = history[stepNumber];
         const squares = current.squares.slice();
@@ -166,8 +164,8 @@ class Game extends React.Component {
                     <header>
                         <p>Random seed</p>
                         <input
-                            name="randomSeedInput"
-                            value={randomSeed}
+                            name="randomSeedWords"
+                            value={randomSeedWords}
                             className="input-elements"
                             onChange={this.handleInputChange}
                         />

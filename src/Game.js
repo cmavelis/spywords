@@ -78,16 +78,28 @@ class Game extends React.Component {
             cardClicked,
             cardColors,
         } = this.state;
+        // get current board
         const historySlice = history.slice(0, stepNumber + 1);
         const current = historySlice[historySlice.length - 1];
         const squares = current.squares.slice();
         // if (calculateWinner(squares) || squares[i]) {
         //   return;
         // }
-        squares[cardClicked] = !squares[cardClicked];
 
+        // change revealed status of clicked card
+        // if LEADER, reveal all
+        if (cardClicked === 'REVEAL') {
+            squares.fill(true);
+        } if (cardClicked === 'HIDE') {
+            squares.fill(false);
+        } else {
+            squares[cardClicked] = !squares[cardClicked];
+        }
+
+        // update card counts
         const counts = _.countBy(cardColors.filter((cc, i) => squares[i]));
 
+        // update state
         this.setState({
             xIsNext: !xIsNext,
             history: historySlice.concat([{
@@ -173,20 +185,38 @@ class Game extends React.Component {
                 <div className="game">
                     {/* make header its own container */}
                     <header>
-                        <p>Random seed</p>
-                        <input
-                            name="randomSeedWords"
-                            value={randomSeedWords}
-                            className="input-elements"
-                            onChange={this.handleInputChange}
-                        />
-                        <button
-                            type="button"
-                            className="input-elements"
-                            onClick={this.seedNewWords}
-                        >
-                            Refresh
-                        </button>
+                        <div className="utilities-box">
+                            <p>Random seed</p>
+                            <input
+                                name="randomSeedWords"
+                                value={randomSeedWords}
+                                className="input-elements"
+                                onChange={this.handleInputChange}
+                            />
+                            <button
+                                type="button"
+                                className="input-elements"
+                                onClick={this.seedNewWords}
+                            >
+                            Seed new words
+                            </button>
+                        </div>
+                        <div className="utilities-box">
+                            <button
+                                type="button"
+                                className="input-elements"
+                                onClick={() => this.showModal('REVEAL')}
+                            >
+                            REVEAL ALL
+                            </button>
+                            <button
+                                type="button"
+                                className="input-elements"
+                                onClick={() => this.showModal('HIDE')}
+                            >
+                            HIDE ALL
+                            </button>
+                        </div>
                     </header>
                     <Board
                         words={words}

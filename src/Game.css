@@ -15,8 +15,9 @@ header {
     background: var(--card-bg-color);
     border-radius: 10px;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     justify-content: space-around;
+    padding: 10px;
 }
 
 ol, ul {
@@ -72,6 +73,7 @@ p {
 
 .card-color-r {
     background: var(--palette-red);
+    color: white;
 }
 
 .card:focus {
@@ -156,4 +158,11 @@ p {
 
 .status {
     margin-bottom: 10px;
+}
+
+.utilities-box {
+    width: 140px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }

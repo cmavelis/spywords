@@ -51,7 +51,8 @@ class Game extends React.Component {
             stepNumber: 0,
             modalShown: false,
             cardClicked: null,
-            randomSeedWords: 1,
+            randomSeedWords: '1',
+            randomSeedColors: '1',
         };
     }
 
@@ -133,6 +134,29 @@ class Game extends React.Component {
         this.setState({ words: wordsSelected });
     };
 
+    seedNewColors = () => {
+        const { randomSeedColors } = this.state;
+        let redHasMore;
+
+        // uses odd/even to determine who goes first
+        if (typeof Number(randomSeedColors) === 'number' && isFinite(randomSeedColors)) {
+            redHasMore = (Number(randomSeedColors) % 2);
+        } else {
+            Math.seedrandom(randomSeedColors);
+            redHasMore = 1 * (Math.random() > 0.5);
+        }
+
+        const redArray = Array(8 + redHasMore).fill('r');
+        const blueArray = Array(9 - redHasMore).fill('b');
+        const whiteArray = Array(7).fill('w');
+        const blackArray = ['k'];
+
+        const fullArray = redArray.concat(blueArray, whiteArray, blackArray);
+        // apply random seed before shuffling the Array
+        Math.seedrandom(randomSeedColors);
+        this.setState({ cardColors: _.shuffle(fullArray) });
+    };
+
     // jumpTo(step) {
     //   this.setState({
     //     stepNumber: step,
@@ -152,6 +176,7 @@ class Game extends React.Component {
             cardClicked,
             counts,
             randomSeedWords,
+            randomSeedColors,
         } = this.state;
         const current = history[stepNumber];
         const squares = current.squares.slice();
@@ -186,7 +211,7 @@ class Game extends React.Component {
                     {/* make header its own container */}
                     <header>
                         <div className="utilities-box">
-                            <p>Random seed</p>
+                            <p>Randomize words</p>
                             <input
                                 name="randomSeedWords"
                                 value={randomSeedWords}
@@ -199,6 +224,22 @@ class Game extends React.Component {
                                 onClick={this.seedNewWords}
                             >
                             Seed new words
+                            </button>
+                        </div>
+                        <div className="utilities-box">
+                            <p>Randomize Colors</p>
+                            <input
+                                name="randomSeedColors"
+                                value={randomSeedColors}
+                                className="input-elements"
+                                onChange={this.handleInputChange}
+                            />
+                            <button
+                                type="button"
+                                className="input-elements"
+                                onClick={this.seedNewColors}
+                            >
+                         Seed new colors
                             </button>
                         </div>
                         <div className="utilities-box">

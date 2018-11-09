@@ -6,7 +6,6 @@
   "dependencies": {
     "merge": "^1.2.1",
     "npm": "^6.4.1",
-    "papaparse": "^4.6.1",
     "prop-types": "^15.6.2",
     "react": "^16.6.0",
     "react-dom": "^16.6.0",

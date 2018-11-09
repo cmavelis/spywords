@@ -5,14 +5,24 @@ import Board from './components/Board';
 import Modal from './components/Modal';
 import './Game.css';
 import 'seedrandom';
-// import Papa from 'papaparse';
-//
-// const wordFile = File('./words_simple.txt');
 
-// const words = Papa.parse(wordFile);
+const wordFile = 'words_simple.csv';
+let wordsReceived = '';
+const xhr = new XMLHttpRequest();
+xhr.open('GET', wordFile, false);
+
+xhr.onload = () => {
+    if (xhr.readyState === xhr.DONE) {
+        if (xhr.status === 200) {
+            wordsReceived = xhr.responseText;
+        }
+    }
+};
+
+xhr.send(null);
 
 // generate placeholder words
-const wordList = _.range(0, 100).map(i => `word ${i}`);
+const wordList = wordsReceived.split(/\r?\n/);
 
 const numberOfWords = wordList.length;
 

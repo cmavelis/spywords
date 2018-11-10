@@ -37,6 +37,27 @@ const cardColorsSample = _.flatten([
     ['b', 'r', 'w', 'r', 'b'],
 ]);
 
+const CardCounter = ({
+    counts,
+}) => (
+    <div className="board-row">
+        <div className="card counter-red">
+                Red cards remaining:
+            {' '}
+            {counts && counts.r
+                ? counts.r
+                : 0}
+        </div>
+        <div className="card counter-blue">
+                Blue cards remaining:
+            {' '}
+            {counts && counts.b
+                ? counts.b
+                : 0}
+        </div>
+    </div>
+);
+
 class Game extends React.Component {
     constructor(props) {
         super(props);
@@ -53,6 +74,7 @@ class Game extends React.Component {
             cardClicked: null,
             randomSeedWords: '1',
             randomSeedColors: '1',
+            counts: _.countBy(cardColorsSample),
         };
     }
 
@@ -69,50 +91,6 @@ class Game extends React.Component {
 
     hideModal = () => {
         this.setState({ modalShown: false });
-    };
-
-    handleCardToggle = () => {
-        const {
-            history,
-            xIsNext,
-            stepNumber,
-            cardClicked,
-            cardColors,
-        } = this.state;
-        // get current board
-        const historySlice = history.slice(0, stepNumber + 1);
-        const current = historySlice[historySlice.length - 1];
-        const squares = current.squares.slice();
-        // if (calculateWinner(squares) || squares[i]) {
-        //   return;
-        // }
-
-        // change revealed status of clicked card
-        // if LEADER, reveal all
-        if (cardClicked === 'REVEAL') {
-            squares.fill(true);
-        } if (cardClicked === 'HIDE') {
-            squares.fill(false);
-        } else {
-            squares[cardClicked] = !squares[cardClicked];
-        }
-
-        // update card counts
-        const counts = _.countBy(cardColors.filter((cc, i) => squares[i]));
-
-        // update state
-        this.setState({
-            xIsNext: !xIsNext,
-            history: historySlice.concat([{
-                squares,
-                whoMoved: xIsNext ? 'X' : 'O',
-                moveLocation: [Math.floor(cardClicked / 5), cardClicked % 5],
-            }]),
-            stepNumber: historySlice.length,
-            counts,
-        });
-
-        this.hideModal();
     };
 
     handleInputChange = (e) => {
@@ -155,6 +133,52 @@ class Game extends React.Component {
         // apply random seed before shuffling the Array
         Math.seedrandom(randomSeedColors);
         this.setState({ cardColors: _.shuffle(fullArray) });
+        this.updateBoard();
+    };
+
+    updateBoard = () => {
+        const {
+            xIsNext,
+            cardClicked,
+            history,
+            stepNumber,
+            cardColors,
+        } = this.state;
+        // get current board
+        const historySlice = history.slice(0, stepNumber + 1);
+        const current = historySlice[historySlice.length - 1];
+        const squares = current.squares.slice();
+
+        // if (calculateWinner(squares) || squares[i]) {
+        //   return;
+        // }
+
+        // change revealed status of clicked card
+        // if LEADER, reveal all
+        if (cardClicked === 'REVEAL') {
+            squares.fill(true);
+        } if (cardClicked === 'HIDE') {
+            squares.fill(false);
+        } if (cardClicked) {
+            squares[cardClicked] = !squares[cardClicked];
+        }
+
+        // update state
+        this.setState({
+            xIsNext: !xIsNext,
+            history: historySlice.concat([{
+                squares,
+                whoMoved: xIsNext ? 'X' : 'O',
+                moveLocation: [Math.floor(cardClicked / 5), cardClicked % 5],
+            }]),
+            stepNumber: historySlice.length,
+            counts: _.countBy(cardColors.filter((cc, i) => !squares[i])),
+        });
+    };
+
+    handleCardToggle = () => {
+        this.updateBoard();
+        this.hideModal();
     };
 
     // jumpTo(step) {
@@ -272,22 +296,9 @@ class Game extends React.Component {
                     {/* <div>{status}</div> */}
                     {/* <ol>{moves}</ol> */}
                     {/* </div> */}
-                    <div className="board-row">
-                        <div className="card counter-red">
-                            Red cards remaining:
-                            {' '}
-                            {counts && counts.r
-                                ? _.countBy(cardColors).r - counts.r
-                                : _.countBy(cardColors).r}
-                        </div>
-                        <div className="card counter-blue">
-                            Blue cards remaining:
-                            {' '}
-                            {counts && counts.b
-                                ? _.countBy(cardColors).b - counts.b
-                                : _.countBy(cardColors).b}
-                        </div>
-                    </div>
+                    <CardCounter
+                        counts={counts}
+                    />
                 </div>
                 <div>
                     <Modal

@@ -7,8 +7,10 @@ const Modal = ({
     show,
     wordClicked,
     children,
+    cardClicked,
 }) => {
     const showHideClassName = show ? 'modal display-block' : 'modal display-none';
+    const displayText = cardClicked < 25 && cardClicked > 0 ? wordClicked : cardClicked;
 
     return (
         <div className={showHideClassName}>
@@ -16,7 +18,7 @@ const Modal = ({
                 {children}
                 <p>
                     <b>
-                        {wordClicked}
+                        {displayText}
                     </b>
                 </p>
                 <div className="div-center">
@@ -38,6 +40,7 @@ Modal.propTypes = {
     handleCardToggle: PropTypes.func.isRequired,
     handleClose: PropTypes.func.isRequired,
     show: PropTypes.bool,
+    cardClicked: PropTypes.string,
     wordClicked: PropTypes.string,
     children: PropTypes.node,
 };
@@ -46,6 +49,7 @@ Modal.defaultProps = {
     show: false,
     children: null,
     wordClicked: 'ERROR',
+    cardClicked: undefined,
 };
 
 export default Modal;

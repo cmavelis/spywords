@@ -7,24 +7,49 @@ import './Game.css';
 import 'seedrandom';
 
 
-const wordFile = 'words_simple.csv';
-let wordsReceived = '';
-const xhr = new XMLHttpRequest();
-xhr.open('GET', wordFile, false);
-
-xhr.onload = () => {
-    if (xhr.readyState === xhr.DONE) {
-        if (xhr.status === 200) {
-            wordsReceived = xhr.responseText;
+const getWordList = (fileName) => {
+    // populate wordList from adjacent file
+    let wordsReceived = '';
+    const xhr = new XMLHttpRequest();
+    xhr.open('GET', fileName, false);
+    xhr.onload = () => {
+        if (xhr.readyState === xhr.DONE) {
+            if (xhr.status === 200) {
+                wordsReceived = xhr.responseText;
+            }
         }
-    }
+    };
+    xhr.send(null);
+
+    const wordList = wordsReceived.split(/\r?\n/);
+    const listLength = wordList.length - 1;
+    return [wordList, listLength];
 };
-xhr.send(null);
 
-// generate placeholder words
-const wordList = wordsReceived.split(/\r?\n/);
+const wordFiles = {
+    cardWords: {
+        filename: 'words_simple.csv',
+        wordList: [],
+        listLength: 0,
+    },
+    adjectives: {
+        filename: 'adjectives_simple.csv',
+        wordList: [],
+        listLength: 0,
+    },
+    nouns: {
+        filename: 'nouns_simple.csv',
+        wordList: [],
+        listLength: 0,
+    },
+};
 
-const numberOfWords = wordList.length - 1;
+Object.keys(wordFiles).forEach((key) => {
+    const [wordList, listLength] = getWordList(wordFiles[key].filename);
+    wordFiles[key].wordList = wordList;
+    wordFiles[key].listLength = listLength;
+});
+
 
 // hard-coded cardColors grid
 // 9 for 1st team, 8 for 2nd team
@@ -36,6 +61,27 @@ const cardColorsSample = _.flatten([
     ['b', 'r', 'w', 'k', 'w'],
     ['b', 'r', 'w', 'r', 'b'],
 ]);
+
+const CardCounter = ({
+    counts,
+}) => (
+    <div className="board-row">
+        <div className="card counter-red">
+                Red cards remaining:
+            {' '}
+            {counts && counts.r
+                ? counts.r
+                : 0}
+        </div>
+        <div className="card counter-blue">
+                Blue cards remaining:
+            {' '}
+            {counts && counts.b
+                ? counts.b
+                : 0}
+        </div>
+    </div>
+);
 
 class Game extends React.Component {
     constructor(props) {
@@ -53,9 +99,11 @@ class Game extends React.Component {
             cardClicked: null,
             randomSeedWords: '1',
             randomSeedColors: '1',
+            counts: _.countBy(cardColorsSample),
         };
     }
 
+    // seedNewWords should go in the constructor I think
     componentDidMount() {
         this.seedNewWords();
     }
@@ -71,50 +119,6 @@ class Game extends React.Component {
         this.setState({ modalShown: false });
     };
 
-    handleCardToggle = () => {
-        const {
-            history,
-            xIsNext,
-            stepNumber,
-            cardClicked,
-            cardColors,
-        } = this.state;
-        // get current board
-        const historySlice = history.slice(0, stepNumber + 1);
-        const current = historySlice[historySlice.length - 1];
-        const squares = current.squares.slice();
-        // if (calculateWinner(squares) || squares[i]) {
-        //   return;
-        // }
-
-        // change revealed status of clicked card
-        // if LEADER, reveal all
-        if (cardClicked === 'REVEAL') {
-            squares.fill(true);
-        } if (cardClicked === 'HIDE') {
-            squares.fill(false);
-        } else {
-            squares[cardClicked] = !squares[cardClicked];
-        }
-
-        // update card counts
-        const counts = _.countBy(cardColors.filter((cc, i) => squares[i]));
-
-        // update state
-        this.setState({
-            xIsNext: !xIsNext,
-            history: historySlice.concat([{
-                squares,
-                whoMoved: xIsNext ? 'X' : 'O',
-                moveLocation: [Math.floor(cardClicked / 5), cardClicked % 5],
-            }]),
-            stepNumber: historySlice.length,
-            counts,
-        });
-
-        this.hideModal();
-    };
-
     handleInputChange = (e) => {
         const { name, value } = e.target;
         this.setState({ [name]: value });
@@ -122,13 +126,14 @@ class Game extends React.Component {
 
     seedNewWords = () => {
         const { randomSeedWords } = this.state;
+        const { wordList, listLength } = wordFiles.cardWords;
         Math.seedrandom(randomSeedWords);
 
         // select sample of words using seed, ignoring repeats
         const wordsSelected = [];
         let wordToAdd = '';
         while (wordsSelected.length < 25) {
-            wordToAdd = wordList[Math.floor(Math.random() * numberOfWords)];
+            wordToAdd = wordList[Math.floor(Math.random() * listLength)];
             if (!wordsSelected.includes(wordToAdd)) wordsSelected.push(wordToAdd);
         }
         this.setState({ words: wordsSelected });
@@ -155,6 +160,52 @@ class Game extends React.Component {
         // apply random seed before shuffling the Array
         Math.seedrandom(randomSeedColors);
         this.setState({ cardColors: _.shuffle(fullArray) });
+        this.updateBoard();
+    };
+
+    updateBoard = () => {
+        const {
+            xIsNext,
+            cardClicked,
+            history,
+            stepNumber,
+            cardColors,
+        } = this.state;
+        // get current board
+        const historySlice = history.slice(0, stepNumber + 1);
+        const current = historySlice[historySlice.length - 1];
+        const squares = current.squares.slice();
+
+        // if (calculateWinner(squares) || squares[i]) {
+        //   return;
+        // }
+
+        // change revealed status of clicked card
+        // if LEADER, reveal all
+        if (cardClicked === 'REVEAL') {
+            squares.fill(true);
+        } if (cardClicked === 'HIDE') {
+            squares.fill(false);
+        } if (cardClicked) {
+            squares[cardClicked] = !squares[cardClicked];
+        }
+
+        // update state
+        this.setState({
+            xIsNext: !xIsNext,
+            history: historySlice.concat([{
+                squares,
+                whoMoved: xIsNext ? 'X' : 'O',
+                moveLocation: [Math.floor(cardClicked / 5), cardClicked % 5],
+            }]),
+            stepNumber: historySlice.length,
+            counts: _.countBy(cardColors.filter((cc, i) => !squares[i])),
+        });
+    };
+
+    handleCardToggle = () => {
+        this.updateBoard();
+        this.hideModal();
     };
 
     // jumpTo(step) {
@@ -272,22 +323,9 @@ class Game extends React.Component {
                     {/* <div>{status}</div> */}
                     {/* <ol>{moves}</ol> */}
                     {/* </div> */}
-                    <div className="board-row">
-                        <div className="card counter-red">
-                            Red cards remaining:
-                            {' '}
-                            {counts && counts.r
-                                ? _.countBy(cardColors).r - counts.r
-                                : _.countBy(cardColors).r}
-                        </div>
-                        <div className="card counter-blue">
-                            Blue cards remaining:
-                            {' '}
-                            {counts && counts.b
-                                ? _.countBy(cardColors).b - counts.b
-                                : _.countBy(cardColors).b}
-                        </div>
-                    </div>
+                    <CardCounter
+                        counts={counts}
+                    />
                 </div>
                 <div>
                     <Modal

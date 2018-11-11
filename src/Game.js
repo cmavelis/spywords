@@ -7,24 +7,49 @@ import './Game.css';
 import 'seedrandom';
 
 
-const wordFile = 'words_simple.csv';
-let wordsReceived = '';
-const xhr = new XMLHttpRequest();
-xhr.open('GET', wordFile, false);
-
-xhr.onload = () => {
-    if (xhr.readyState === xhr.DONE) {
-        if (xhr.status === 200) {
-            wordsReceived = xhr.responseText;
+const getWordList = (fileName) => {
+    // populate wordList from adjacent file
+    let wordsReceived = '';
+    const xhr = new XMLHttpRequest();
+    xhr.open('GET', fileName, false);
+    xhr.onload = () => {
+        if (xhr.readyState === xhr.DONE) {
+            if (xhr.status === 200) {
+                wordsReceived = xhr.responseText;
+            }
         }
-    }
+    };
+    xhr.send(null);
+
+    const wordList = wordsReceived.split(/\r?\n/);
+    const listLength = wordList.length - 1;
+    return [wordList, listLength];
 };
-xhr.send(null);
 
-// generate placeholder words
-const wordList = wordsReceived.split(/\r?\n/);
+const wordFiles = {
+    cardWords: {
+        filename: 'words_simple.csv',
+        wordList: [],
+        listLength: 0,
+    },
+    adjectives: {
+        filename: 'adjectives_simple.csv',
+        wordList: [],
+        listLength: 0,
+    },
+    nouns: {
+        filename: 'nouns_simple.csv',
+        wordList: [],
+        listLength: 0,
+    },
+};
 
-const numberOfWords = wordList.length - 1;
+Object.keys(wordFiles).forEach((key) => {
+    const [wordList, listLength] = getWordList(wordFiles[key].filename);
+    wordFiles[key].wordList = wordList;
+    wordFiles[key].listLength = listLength;
+});
+
 
 // hard-coded cardColors grid
 // 9 for 1st team, 8 for 2nd team
@@ -78,6 +103,7 @@ class Game extends React.Component {
         };
     }
 
+    // seedNewWords should go in the constructor I think
     componentDidMount() {
         this.seedNewWords();
     }
@@ -100,13 +126,14 @@ class Game extends React.Component {
 
     seedNewWords = () => {
         const { randomSeedWords } = this.state;
+        const { wordList, listLength } = wordFiles.cardWords;
         Math.seedrandom(randomSeedWords);
 
         // select sample of words using seed, ignoring repeats
         const wordsSelected = [];
         let wordToAdd = '';
         while (wordsSelected.length < 25) {
-            wordToAdd = wordList[Math.floor(Math.random() * numberOfWords)];
+            wordToAdd = wordList[Math.floor(Math.random() * listLength)];
             if (!wordsSelected.includes(wordToAdd)) wordsSelected.push(wordToAdd);
         }
         this.setState({ words: wordsSelected });

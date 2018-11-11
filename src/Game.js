@@ -111,6 +111,19 @@ class Game extends React.Component {
     // seedNewWords should go in the constructor I think
     componentDidMount() {
         this.seedNewWords();
+        const { randomSeedWords, randomSeedColors } = this.state;
+        if (randomSeedWords === '1') {
+            Math.seedrandom(Date.now());
+            this.setState(
+                { randomSeedWords: this.getRandomWord(wordFiles.seedAdjectives) },
+            );
+        }
+        if (randomSeedColors === '1') {
+            Math.seedrandom(Date.now());
+            this.setState(
+                { randomSeedColors: this.getRandomWord(wordFiles.seedNouns) },
+            );
+        }
     }
 
     showModal = (cardID) => {
@@ -127,6 +140,11 @@ class Game extends React.Component {
     handleInputChange = (e) => {
         const { name, value } = e.target;
         this.setState({ [name]: value });
+    };
+
+    getRandomWord = (wordObject) => {
+        const { wordList, listLength } = wordObject;
+        return wordList[Math.floor(Math.random() * listLength)];
     };
 
     seedNewWords = () => {

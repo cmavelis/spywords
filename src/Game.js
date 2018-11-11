@@ -27,18 +27,23 @@ const getWordList = (fileName) => {
 };
 
 const wordFiles = {
-    cardWords: {
+    cardsClassic: {
+        filename: 'words_classic.csv',
+        wordList: [],
+        listLength: 0,
+    },
+    cardsSimple: {
         filename: 'words_simple.csv',
         wordList: [],
         listLength: 0,
     },
-    adjectives: {
-        filename: 'adjectives_simple.csv',
+    seedAdjectives: {
+        filename: 'seed_adjectives.csv',
         wordList: [],
         listLength: 0,
     },
-    nouns: {
-        filename: 'nouns_simple.csv',
+    seedNouns: {
+        filename: 'seed_nouns.csv',
         wordList: [],
         listLength: 0,
     },
@@ -126,7 +131,7 @@ class Game extends React.Component {
 
     seedNewWords = () => {
         const { randomSeedWords } = this.state;
-        const { wordList, listLength } = wordFiles.cardWords;
+        const { wordList, listLength } = wordFiles.cardsSimple;
         Math.seedrandom(randomSeedWords);
 
         // select sample of words using seed, ignoring repeats

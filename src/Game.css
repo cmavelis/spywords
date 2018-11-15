@@ -6,9 +6,18 @@
 }
 
 body {
-    font: 14px "Century Gothic", Futura, sans-serif;
+    font: 0.9rem "Century Gothic", Futura, sans-serif;
     margin: 20px;
     background: var(--main-bg-color);
+}
+
+button {
+    font: inherit;
+    height: 100%;
+}
+
+input {
+    font: inherit;
 }
 
 header {
@@ -17,7 +26,8 @@ header {
     display: flex;
     flex-direction: row;
     justify-content: space-around;
-    padding: 10px;
+    padding: 0.8rem;
+    margin-bottom: 0.5rem;
 }
 
 ol, ul {
@@ -26,11 +36,13 @@ ol, ul {
 
 p {
     text-align: center;
+    margin-top: 0.3rem;
 }
 
 .board-row {
     display: flex;
     justify-content: center;
+    flex-shrink: initial;
 }
 
 .board-row:after {
@@ -39,21 +51,23 @@ p {
     /*display: table;*/
 }
 
-
 .card {
     background: var(--card-bg-color);
     border: 6px solid #999;
     border-radius: 10px;
     /*float: left;*/
-    font-size: 24px;
+    font-size: 2.3vw;
     font-weight: bold;
     line-height: 34px;
-    height: 75px;
-    margin-right: 10px;
-    margin-top: 10px;
-    padding: 10px;
+    height: 10%;
+    margin: 5px;
+    padding: 0.8vw 1vw;
     text-align: center;
-    width: 200px;
+    width: 20%;
+    max-width: 200px;
+    flex-shrink: 0;
+    overflow-x: visible;
+    overflow-y: visible;
 }
 
 .card-color-w {
@@ -82,12 +96,14 @@ p {
 
 .counter-red {
     background: var(--palette-red);
-    border-width: 1px
+    border-width: 1px;
+    width: 40%;
 }
 
 .counter-blue {
     background: var(--palette-blue);
-    border-width: 1px
+    border-width: 1px;
+    width: 40%;
 }
 
 .display-block {
@@ -113,6 +129,7 @@ p {
     flex-direction: column;
     justify-content: center;
     margin: 0 auto;
+    min-width: 95%;
 }
 
 .game-info {
@@ -133,23 +150,27 @@ p {
     position: fixed;
     top: 0;
     left: 0;
-    width:100%;
+    width: 100%;
     height: 100%;
+    min-width: fit-content;
+    min-height: fit-content;
     background: rgba(0, 0, 0, 0.6);
 }
 
 .modal-button {
-    max-width: 100px;
+    max-width: 80%;
+    min-height: 3rem;
+    font-size: 1.5rem;
 }
 
 .modal-main {
     position:fixed;
     background: var(--card-bg-color);
     border-radius: 10px;
-    width: 20%;
-    height: 200px;
-    top:20%;
-    left:50%;
+    min-width: 20%;
+    min-height: 30%;
+    top: 40%;
+    left: 50%;
     transform: translate(-50%,-50%);
     display: flex;
     flex-direction: column;
@@ -161,7 +182,7 @@ p {
 }
 
 .utilities-box {
-    width: 140px;
+    width: 30%;
     display: flex;
     flex-direction: column;
     justify-content: center;

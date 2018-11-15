@@ -134,7 +134,7 @@ class Game extends React.Component {
     };
 
     hideModal = () => {
-        this.setState({ modalShown: false });
+        this.setState({ modalShown: false, cardClicked: undefined });
     };
 
     handleInputChange = (e) => {

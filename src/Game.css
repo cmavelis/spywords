@@ -18,6 +18,9 @@ header {
     flex-direction: row;
     justify-content: space-around;
     padding: 10px;
+    transition: max-height 1s ease-in-out;
+    overflow: hidden;
+    max-height: 200px;
 }
 
 ol, ul {
@@ -117,6 +120,13 @@ p {
 
 .game-info {
     margin-left: 20px;
+}
+
+.header-show-bar {
+    max-height: 15px;
+    /*&:active {*/
+
+     /*}*/
 }
 
 .input-elements {

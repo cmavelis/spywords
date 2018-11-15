@@ -49,11 +49,11 @@ const wordFiles = {
     },
 };
 
-Object.keys(wordFiles).forEach((key) => {
-    const [wordList, listLength] = getWordList(wordFiles[key].filename);
-    wordFiles[key].wordList = wordList;
-    wordFiles[key].listLength = listLength;
-});
+// Object.keys(wordFiles).forEach((key) => {
+//     const [wordList, listLength] = getWordList(wordFiles[key].filename);
+//     wordFiles[key].wordList = wordList;
+//     wordFiles[key].listLength = listLength;
+// });
 
 
 // hard-coded cardColors grid

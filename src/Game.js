@@ -136,7 +136,7 @@ class Game extends React.Component {
 
     handleInputChange = (e) => {
         const { name, value } = e.target;
-        this.setState({ [name]: value });
+        this.setState({ [name]: value.toLowerCase() });
     };
 
     getRandomWord = (wordObject) => {

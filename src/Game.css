@@ -3,6 +3,7 @@
     --palette-red: #db5a69;
     --palette-blue: #5bafd9;
     --card-bg-color: #ffe895;
+    --card-border: #999
 }
 
 body {
@@ -14,6 +15,8 @@ body {
 button {
     font: inherit;
     height: 100%;
+    background: #ebe8e8;
+    border-radius: 0.2rem 0.6rem;
 }
 
 input {
@@ -53,7 +56,7 @@ p {
 
 .card {
     background: var(--card-bg-color);
-    border: 6px solid #999;
+    border: 6px solid var(--card-border);
     border-radius: 10px;
     /*float: left;*/
     font-size: 2.3vw;

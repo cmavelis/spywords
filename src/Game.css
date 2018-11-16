@@ -1,8 +1,8 @@
 :root {
-  --main-bg-color: darkslategray;
+  --main-bg-color: #1b1126;
     --palette-red: #db5a69;
     --palette-blue: #5bafd9;
-    --card-bg-color: #ffe895;
+    --card-bg-color: #ffebc4;
 }
 
 body {

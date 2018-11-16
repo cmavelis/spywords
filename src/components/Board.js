@@ -8,7 +8,7 @@ function Card(props) {
         value,
         color,
     } = props;
-    const cls = `card ${status ? `card-color- ${color}` : ''}`;
+    const cls = `card ${status ? `card-color-${color}` : ''}`;
     return (
         <button type="button" className={cls} onClick={onClick}>
             {value}

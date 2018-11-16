@@ -52,8 +52,8 @@ class Board extends React.Component {
 Board.propTypes = {
     onClick: PropTypes.func.isRequired,
     words: PropTypes.arrayOf(PropTypes.string).isRequired,
-    squares: PropTypes.arrayOf(PropTypes.string).isRequired,
-    cardIDs: PropTypes.arrayOf(PropTypes.string).isRequired,
+    squares: PropTypes.arrayOf(PropTypes.bool).isRequired,
+    cardIDs: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.number)).isRequired,
     cardColors: PropTypes.arrayOf(PropTypes.string).isRequired,
 };
 Card.propTypes = {

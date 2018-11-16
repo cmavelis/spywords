@@ -1,5 +1,6 @@
 import _ from 'underscore';
 import React from 'react';
+import PropTypes from 'prop-types';
 import Board from './components/Board';
 import Modal from './components/Modal';
 import './Game.css';
@@ -66,7 +67,9 @@ const cardColorsSample = _.flatten([
     ['b', 'r', 'w', 'r', 'b'],
 ]);
 
-const CardCounter = counts => (
+const CardCounter = ({
+    counts,
+}) => (
     <div className="board-row">
         <div className="card counter-red">
                 Red cards remaining:
@@ -164,7 +167,7 @@ class Game extends React.Component {
         let redHasMore;
 
         // uses odd/even to determine who goes first
-        if (typeof Number(randomSeedColors) === 'number' && isFinite(randomSeedColors)) {
+        if (typeof Number(randomSeedColors) === 'number' && _.isFinite(randomSeedColors)) {
             redHasMore = (Number(randomSeedColors) % 2);
         } else {
             Math.seedrandom(randomSeedColors);
@@ -206,7 +209,7 @@ class Game extends React.Component {
             squares.fill(true);
         } if (cardClicked === 'HIDE') {
             squares.fill(false);
-        } if (cardClicked) {
+        } if (!_.isNaN(cardClicked)) {
             squares[cardClicked] = !squares[cardClicked];
         }
 
@@ -364,5 +367,14 @@ class Game extends React.Component {
         );
     }
 }
+
+CardCounter.propTypes = {
+    counts: PropTypes.shape({
+        r: PropTypes.number,
+        b: PropTypes.number,
+        k: PropTypes.number,
+        w: PropTypes.number,
+    }).isRequired,
+};
 
 export default Game;

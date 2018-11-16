@@ -23,12 +23,12 @@ const Modal = ({
                 </p>
                 <div className="div-center">
                     <button className="modal-button input-elements" type="button" onClick={handleCardToggle}>
-                        Toggle
+                        Confirm
                     </button>
                 </div>
                 <div className="div-center">
                     <button className="modal-button input-elements" type="button" onClick={handleClose}>
-                        Close window
+                        Close
                     </button>
                 </div>
             </section>

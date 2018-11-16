@@ -1,4 +1,3 @@
-/* eslint-disable react/forbid-prop-types */
 import React from 'react';
 import PropTypes from 'prop-types';
 
@@ -9,7 +8,7 @@ function Card(props) {
         value,
         color,
     } = props;
-    const cls = 'card' + (status ? ' card-color-'+color : '');
+    const cls = `card ${status ? `card-color- ${color}` : ''}`;
     return (
         <button type="button" className={cls} onClick={onClick}>
             {value}
@@ -41,7 +40,7 @@ class Board extends React.Component {
         return (
             <div className="game-board">
                 {cardIDs.map((row, i) => (
-                    <div className="board-row" key={i}>
+                    <div className="board-row" key={`row ${i}`}>
                         {row.map((card, j) => this.renderCard(i * 5 + j))}
                     </div>
                 ))}
@@ -52,10 +51,10 @@ class Board extends React.Component {
 
 Board.propTypes = {
     onClick: PropTypes.func.isRequired,
-    words: PropTypes.array.isRequired,
-    squares: PropTypes.array.isRequired,
-    cardIDs: PropTypes.array.isRequired,
-    cardColors: PropTypes.array.isRequired,
+    words: PropTypes.arrayOf(PropTypes.string).isRequired,
+    squares: PropTypes.arrayOf(PropTypes.string).isRequired,
+    cardIDs: PropTypes.arrayOf(PropTypes.string).isRequired,
+    cardColors: PropTypes.arrayOf(PropTypes.string).isRequired,
 };
 Card.propTypes = {
     onClick: PropTypes.func.isRequired,

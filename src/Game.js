@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import _ from 'underscore';
 import React from 'react';
 import Board from './components/Board';
@@ -67,9 +66,7 @@ const cardColorsSample = _.flatten([
     ['b', 'r', 'w', 'r', 'b'],
 ]);
 
-const CardCounter = ({
-    counts,
-}) => (
+const CardCounter = counts => (
     <div className="board-row">
         <div className="card counter-red">
                 Red cards remaining:

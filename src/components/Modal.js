@@ -10,7 +10,7 @@ const Modal = ({
     cardClicked,
 }) => {
     const showHideClassName = show ? 'modal display-block' : 'modal display-none';
-    const displayText = cardClicked < 25 && cardClicked > 0 ? wordClicked : cardClicked;
+    const displayText = cardClicked < 25 && cardClicked >= 0 ? wordClicked : cardClicked;
 
     return (
         <div className={showHideClassName}>

@@ -1,9 +1,9 @@
 :root {
-  --main-bg-color: darkslategray;
-    --palette-red: #db5a69;
-    --palette-blue: #5bafd9;
-    --card-bg-color: #ffe895;
-    --card-border: #999
+    --main-bg-color:#384d48;
+    --palette-red:#db5a69;
+    --palette-blue:#5bafd9;
+    --card-bg-color:#ffeecf;
+    --card-border:#999
 }
 
 body {

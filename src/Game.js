@@ -11,7 +11,6 @@ const getWordList = (fileName) => {
     // populate wordList from adjacent file
     let wordsReceived = '';
     const xhr = new XMLHttpRequest();
-    xhr.open('GET', fileName, false);
     xhr.onload = () => {
         if (xhr.readyState === xhr.DONE) {
             if (xhr.status === 200) {
@@ -19,6 +18,7 @@ const getWordList = (fileName) => {
             }
         }
     };
+    xhr.open('GET', fileName, false);
     xhr.send(null);
 
     const wordList = wordsReceived.split(/\r?\n/);
@@ -49,12 +49,18 @@ const wordFiles = {
     },
 };
 
-Object.keys(wordFiles).forEach((key) => {
-    const [wordList, listLength] = getWordList(wordFiles[key].filename);
-    wordFiles[key].wordList = wordList;
-    wordFiles[key].listLength = listLength;
-});
+const getWords = () => {
+    Object.keys(wordFiles)
+        .forEach((key) => {
+            const [wordList, listLength] = getWordList(wordFiles[key].filename);
+            wordFiles[key].wordList = wordList;
+            wordFiles[key].listLength = listLength;
+        });
+};
 
+const promiseGetWords = new Promise((succeed, fail) => {
+    succeed(getWords());
+});
 
 // hard-coded cardColors grid
 // 9 for 1st team, 8 for 2nd team
@@ -111,7 +117,6 @@ class Game extends React.Component {
 
     // seedNewWords should go in the constructor I think
     componentDidMount() {
-        this.seedNewWords();
         const { randomSeedWords, randomSeedColors } = this.state;
         if (randomSeedWords === '1') {
             Math.seedrandom(Date.now());
@@ -125,6 +130,9 @@ class Game extends React.Component {
                 { randomSeedColors: this.getRandomWord(wordFiles.seedNouns) },
             );
         }
+        promiseGetWords.then(this.seedNewWords)
+            .then(this.seedNewColors)
+            .catch(err => console.log(`There was an error:${err}`));
     }
 
     showModal = (cardID) => {

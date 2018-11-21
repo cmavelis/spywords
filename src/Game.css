@@ -33,6 +33,23 @@ header {
     margin-bottom: 0.5rem;
 }
 
+.hiding-box {
+    max-height: 20rem;
+    transition: max-height 1s ease-in-out;
+}
+
+.hiding-box-hidden {
+    max-height: 1.2rem;
+}
+.hiding-box-hidden .utilities-box {
+    max-height: 0;
+}
+
+.hide-button {
+    height: 1.2rem;
+    width: 1.2rem;
+}
+
 ol, ul {
     padding-left: 30px;
 }
@@ -188,4 +205,7 @@ p {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    transition: max-height 0.5s ease-in-out;
+    max-height: 20rem;
+    overflow: hidden;
 }

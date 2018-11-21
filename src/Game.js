@@ -105,6 +105,7 @@ class Game extends React.Component {
             randomSeedWords: '1',
             randomSeedColors: '1',
             counts: _.countBy(cardColorsSample),
+            headerIsHidden: false,
         };
     }
 
@@ -186,6 +187,13 @@ class Game extends React.Component {
         this.updateBoard();
     };
 
+    toggleHeaderHide = () => {
+        const { headerIsHidden } = this.state;
+        this.setState({
+            headerIsHidden: !headerIsHidden,
+        });
+    };
+
     updateBoard = () => {
         const {
             xIsNext,
@@ -251,6 +259,7 @@ class Game extends React.Component {
             counts,
             randomSeedWords,
             randomSeedColors,
+            headerIsHidden,
         } = this.state;
         const current = history[stepNumber];
         const squares = current.squares.slice();
@@ -283,7 +292,12 @@ class Game extends React.Component {
             <div>
                 <div className="game">
                     {/* make header its own container */}
-                    <header>
+                    <header className={`hiding-box ${headerIsHidden ? 'hiding-box-hidden' : ''}`}>
+                        <button
+                            type="button"
+                            className="hide-button"
+                            onClick={this.toggleHeaderHide}
+                        />
                         <div className="utilities-box">
                             <p>Randomize words</p>
                             <input

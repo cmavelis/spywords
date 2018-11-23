@@ -158,7 +158,7 @@ class Game extends React.Component {
 
     seedNewWords = () => {
         const { randomSeedWords } = this.state;
-        const { wordList, listLength } = wordFiles.cardsSimple;
+        const { wordList, listLength } = wordFiles.cardsClassic;
         Math.seedrandom(randomSeedWords);
 
         // select sample of words using seed, ignoring repeats

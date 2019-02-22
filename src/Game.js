@@ -311,44 +311,50 @@ class Game extends React.Component {
                             className="hide-button"
                             onClick={this.toggleHeaderHide}
                         />
-                        <div className="utilities-box">
-                            <p>Words code</p>
-                            <input
-                                name="randomSeedWords"
-                                value={randomSeedWords}
-                                className="input-elements"
-                                onChange={this.handleInputChange}
-                            />
-                            <p>Colors code</p>
-                            <input
-                                name="randomSeedColors"
-                                value={randomSeedColors}
-                                className="input-elements"
-                                onChange={this.handleInputChange}
-                            />
-                            <button
-                                type="button"
-                                className="input-elements"
-                                onClick={this.seedNewGame}
-                            >
+                        <div className="utility-row">
+                            <div className="utilities-box">
+                                <p>Words code</p>
+                                <input
+                                    name="randomSeedWords"
+                                    value={randomSeedWords}
+                                    className="input-elements"
+                                    onChange={this.handleInputChange}
+                                />
+                            </div>
+                            <div className="utilities-box">
+                                <p>Colors code</p>
+                                <input
+                                    name="randomSeedColors"
+                                    value={randomSeedColors}
+                                    className="input-elements"
+                                    onChange={this.handleInputChange}
+                                />
+                            </div>
+                            <div className="utilities-box">
+                                <button
+                                    type="button"
+                                    className="input-elements"
+                                    onClick={this.seedNewGame}
+                                >
                             Refresh game
-                            </button>
-                        </div>
-                        <div className="utilities-box">
-                            <button
-                                type="button"
-                                className="input-elements"
-                                onClick={() => this.showModal('REVEAL')}
-                            >
+                                </button>
+                            </div>
+                            <div className="utilities-box">
+                                <button
+                                    type="button"
+                                    className="input-elements"
+                                    onClick={() => this.showModal('REVEAL')}
+                                >
                             REVEAL ALL
-                            </button>
-                            <button
-                                type="button"
-                                className="input-elements"
-                                onClick={() => this.showModal('HIDE')}
-                            >
+                                </button>
+                                <button
+                                    type="button"
+                                    className="input-elements"
+                                    onClick={() => this.showModal('HIDE')}
+                                >
                             HIDE ALL
-                            </button>
+                                </button>
+                            </div>
                         </div>
                     </header>
                     <Board

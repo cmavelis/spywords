@@ -57,6 +57,7 @@ ol, ul {
 p {
     text-align: center;
     margin-top: 0.3rem;
+    margin-bottom: 0.3rem;
 }
 
 .board-row {
@@ -158,8 +159,10 @@ p {
 
 .input-elements {
     margin: 0.5rem;
+    padding: 0.3rem;
     width: 75%;
     align-self: center;
+    text-wrap: avoid;
 }
 
 .kbd-navigation .card:focus {
@@ -198,6 +201,11 @@ p {
 
 .status {
     margin-bottom: 10px;
+}
+
+.utility-row {
+    display: flex;
+    flex-direction: row;
 }
 
 .utilities-box {

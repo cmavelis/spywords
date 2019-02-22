@@ -195,6 +195,11 @@ class Game extends React.Component {
         this.updateBoard();
     };
 
+    seedNewGame = () => {
+        this.seedNewColors();
+        this.seedNewWords();
+    };
+
     toggleHeaderHide = () => {
         const { headerIsHidden } = this.state;
         this.setState({
@@ -307,23 +312,14 @@ class Game extends React.Component {
                             onClick={this.toggleHeaderHide}
                         />
                         <div className="utilities-box">
-                            <p>Randomize words</p>
+                            <p>Words code</p>
                             <input
                                 name="randomSeedWords"
                                 value={randomSeedWords}
                                 className="input-elements"
                                 onChange={this.handleInputChange}
                             />
-                            <button
-                                type="button"
-                                className="input-elements"
-                                onClick={this.seedNewWords}
-                            >
-                            Seed new words
-                            </button>
-                        </div>
-                        <div className="utilities-box">
-                            <p>Randomize Colors</p>
+                            <p>Colors code</p>
                             <input
                                 name="randomSeedColors"
                                 value={randomSeedColors}
@@ -333,9 +329,9 @@ class Game extends React.Component {
                             <button
                                 type="button"
                                 className="input-elements"
-                                onClick={this.seedNewColors}
+                                onClick={this.seedNewGame}
                             >
-                         Seed new colors
+                            Refresh game
                             </button>
                         </div>
                         <div className="utilities-box">

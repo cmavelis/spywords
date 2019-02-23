@@ -108,8 +108,7 @@ class Game extends React.Component {
             stepNumber: 0,
             modalShown: false,
             cardClicked: null,
-            randomSeedWords: '1',
-            randomSeedColors: '1',
+            randomSeed: '1',
             counts: _.countBy(cardColorsSample),
             headerIsHidden: false,
         };
@@ -117,21 +116,16 @@ class Game extends React.Component {
 
     // seedNewWords should go in the constructor I think
     componentDidMount() {
-        const { randomSeedWords, randomSeedColors } = this.state;
-        if (randomSeedWords === '1') {
+        const { randomSeed } = this.state;
+        if (randomSeed === '1') {
             Math.seedrandom(Date.now());
+            const randomAdjective = this.getRandomWord(wordFiles.seedAdjectives);
+            const randomNoun = this.getRandomWord(wordFiles.seedNouns);
             this.setState(
-                { randomSeedWords: this.getRandomWord(wordFiles.seedAdjectives) },
+                { randomSeed: `${randomAdjective} ${randomNoun}` },
             );
         }
-        if (randomSeedColors === '1') {
-            Math.seedrandom(Date.now());
-            this.setState(
-                { randomSeedColors: this.getRandomWord(wordFiles.seedNouns) },
-            );
-        }
-        promiseGetWords.then(this.seedNewWords)
-            .then(this.seedNewColors)
+        promiseGetWords.then(this.seedNewGame)
             .catch(err => console.log(`There was an error:${err}`));
     }
 
@@ -156,11 +150,16 @@ class Game extends React.Component {
         return wordList[Math.floor(Math.random() * listLength)];
     };
 
-    seedNewWords = () => {
-        const { randomSeedWords } = this.state;
+    seedNewGame = () => {
+        const { randomSeed } = this.state;
         const { wordList, listLength } = wordFiles.cardsClassic;
-        Math.seedrandom(randomSeedWords);
-
+        const today = new Date();
+        const todayValue = today.getFullYear().toString() + today.getMonth() + today.getDate();
+        if (randomSeed === 'test') {
+            Math.seedrandom(randomSeed);
+        } else {
+            Math.seedrandom(randomSeed * todayValue);
+        }
         // select sample of words using seed, ignoring repeats
         const wordsSelected = [];
         let wordToAdd = '';
@@ -168,18 +167,14 @@ class Game extends React.Component {
             wordToAdd = wordList[Math.floor(Math.random() * listLength)];
             if (!wordsSelected.includes(wordToAdd)) wordsSelected.push(wordToAdd);
         }
-        this.setState({ words: wordsSelected });
-    };
 
-    seedNewColors = () => {
-        const { randomSeedColors } = this.state;
         let redHasMore;
 
         // uses odd/even to determine who goes first
-        if (typeof Number(randomSeedColors) === 'number' && _.isFinite(randomSeedColors)) {
-            redHasMore = (Number(randomSeedColors) % 2);
+        if (typeof Number(randomSeed) === 'number' && _.isFinite(randomSeed)) {
+            redHasMore = (Number(randomSeed) % 2);
         } else {
-            Math.seedrandom(randomSeedColors);
+            Math.seedrandom(randomSeed);
             redHasMore = 1 * (Math.random() > 0.5);
         }
 
@@ -190,14 +185,12 @@ class Game extends React.Component {
 
         const fullArray = redArray.concat(blueArray, whiteArray, blackArray);
         // apply random seed before shuffling the Array
-        Math.seedrandom(randomSeedColors);
-        this.setState({ cardColors: _.shuffle(fullArray) });
+        Math.seedrandom(randomSeed);
+        this.setState({
+            cardColors: _.shuffle(fullArray),
+            words: wordsSelected,
+        });
         this.updateBoard();
-    };
-
-    seedNewGame = () => {
-        this.seedNewColors();
-        this.seedNewWords();
     };
 
     toggleHeaderHide = () => {
@@ -270,8 +263,7 @@ class Game extends React.Component {
             modalShown,
             cardClicked,
             counts,
-            randomSeedWords,
-            randomSeedColors,
+            randomSeed,
             headerIsHidden,
         } = this.state;
         const current = history[stepNumber];
@@ -313,19 +305,10 @@ class Game extends React.Component {
                         />
                         <div className="utility-row">
                             <div className="utilities-box">
-                                <p>Words code</p>
+                                <p>Game code</p>
                                 <input
-                                    name="randomSeedWords"
-                                    value={randomSeedWords}
-                                    className="input-elements"
-                                    onChange={this.handleInputChange}
-                                />
-                            </div>
-                            <div className="utilities-box">
-                                <p>Colors code</p>
-                                <input
-                                    name="randomSeedColors"
-                                    value={randomSeedColors}
+                                    name="randomSeed"
+                                    value={randomSeed}
                                     className="input-elements"
                                     onChange={this.handleInputChange}
                                 />

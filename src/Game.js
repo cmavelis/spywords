@@ -153,8 +153,13 @@ class Game extends React.Component {
     seedNewGame = () => {
         const { randomSeed } = this.state;
         const { wordList, listLength } = wordFiles.cardsClassic;
-        Math.seedrandom(randomSeed);
-
+        const today = new Date();
+        const todayValue = today.getFullYear().toString() + today.getMonth() + today.getDate();
+        if (randomSeed === 'test') {
+            Math.seedrandom(randomSeed);
+        } else {
+            Math.seedrandom(randomSeed * todayValue);
+        }
         // select sample of words using seed, ignoring repeats
         const wordsSelected = [];
         let wordToAdd = '';

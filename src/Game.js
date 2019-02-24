@@ -77,16 +77,15 @@ const CardCounter = ({
     counts,
 }) => (
     <div className="board-row">
-        <div className="card counter-red">
-                Red cards remaining:
-            {' '}
+        <div className="card counter card-color-r">
             {counts && counts.r
                 ? counts.r
                 : 0}
         </div>
-        <div className="card counter-blue">
-                Blue cards remaining:
-            {' '}
+        <div className="card counter card-color-blank any-width">
+            cards remaining
+        </div>
+        <div className="card counter card-color-b">
             {counts && counts.b
                 ? counts.b
                 : 0}
@@ -151,15 +150,15 @@ class Game extends React.Component {
     };
 
     seedNewGame = () => {
-        const { randomSeed } = this.state;
+        let { randomSeed } = this.state;
         const { wordList, listLength } = wordFiles.cardsClassic;
         const today = new Date();
-        const todayValue = today.getFullYear().toString() + today.getMonth() + today.getDate();
-        if (randomSeed === 'test') {
-            Math.seedrandom(randomSeed);
-        } else {
-            Math.seedrandom(randomSeed * todayValue);
+        const todayValue = today.getUTCFullYear().toString()
+            + today.getUTCMonth() + today.getUTCDate();
+        if (randomSeed !== 'test') {
+            randomSeed = todayValue + randomSeed;
         }
+        Math.seedrandom(randomSeed);
         // select sample of words using seed, ignoring repeats
         const wordsSelected = [];
         let wordToAdd = '';

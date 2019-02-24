@@ -110,20 +110,21 @@ p {
     color: white;
 }
 
+.card-color-blank {
+    background: var(--main-bg-color);
+    color:white
+}
+
 .card:focus {
     outline: none;
 }
 
-.counter-red {
-    background: var(--palette-red);
+.counter {
     border-width: 1px;
-    width: 40%;
 }
 
-.counter-blue {
-    background: var(--palette-blue);
-    border-width: 1px;
-    width: 40%;
+.any-width {
+    width: inherit !important;
 }
 
 .display-block {

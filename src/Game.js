@@ -194,10 +194,6 @@ class Game extends React.Component {
         const current = historySlice[historySlice.length - 1];
         const squares = current.squares.slice();
 
-        // if (calculateWinner(squares) || squares[i]) {
-        //   return;
-        // }
-
         // change revealed status of clicked card
         // if LEADER, reveal all
         if (cardClicked === 'REVEAL') {
@@ -226,20 +222,12 @@ class Game extends React.Component {
         this.hideModal();
     };
 
-    // jumpTo(step) {
-    //   this.setState({
-    //     stepNumber: step,
-    //     xIsNext: (step % 2) === 0,
-    //   });
-    // }
-
     render() {
         const {
             history,
             words,
             cardIDs,
             cardColors,
-            // startingCount,
             stepNumber,
             modalShown,
             cardClicked,
@@ -250,34 +238,9 @@ class Game extends React.Component {
         const current = history[stepNumber];
         const squares = current.squares.slice();
 
-        // const winner = calculateWinner(current.squares);
-
-        // const moves = history.map((step, move) => {
-        //   const desc = move ?
-        //      'Go to move #'+ move + ': ' + step.whoMoved + ' to (r,c) ' + step.moveLocation :
-        //      'Go to game start';
-        //   return (
-        //     <li key={move}>
-        //        {this.state.stepNumber == move ? (
-        //         <button onClick={() => this.jumpTo(move)}><b>{desc}</b></button>
-        //         ):
-        //        (<button onClick={() => this.jumpTo(move)}>{desc}</button>)
-        //        }
-        //     </li>
-        //   );
-        // });
-
-        // let status;
-        // if (winner) {
-        //   status = 'Winner: ' + winner;
-        // } else {
-        //   status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
-        // }
-
         return (
             <div>
                 <div className="game">
-                    {/* make header its own container */}
                     <Header
                         randomSeed={randomSeed}
                         headerIsHidden={headerIsHidden}
@@ -294,11 +257,6 @@ class Game extends React.Component {
                         modalClick={this.handleCardToggle}
                         cardColors={cardColors}
                     />
-
-                    {/* <div className="game-info"> */}
-                    {/* <div>{status}</div> */}
-                    {/* <ol>{moves}</ol> */}
-                    {/* </div> */}
                     <CardCounter
                         counts={counts}
                     />

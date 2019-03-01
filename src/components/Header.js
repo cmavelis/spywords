@@ -39,16 +39,9 @@ const Header = ({
                 <button
                     type="button"
                     className="input-elements"
-                    onClick={() => showModal('REVEAL')}
+                    onClick={() => showModal('Toggle Leader mode?')}
                 >
-                    REVEAL ALL
-                </button>
-                <button
-                    type="button"
-                    className="input-elements"
-                    onClick={() => showModal('HIDE')}
-                >
-                    HIDE ALL
+                    LEADER MODE
                 </button>
             </div>
         </div>

@@ -1,7 +1,8 @@
 import _ from 'underscore';
 import React from 'react';
-import PropTypes from 'prop-types';
 import Board from './components/Board';
+import CardCounter from './components/CardCounter';
+import Header from './components/Header';
 import Modal from './components/Modal';
 import './Game.css';
 import 'seedrandom';
@@ -73,25 +74,6 @@ const cardColorsSample = _.flatten([
     ['b', 'r', 'w', 'r', 'b'],
 ]);
 
-const CardCounter = ({
-    counts,
-}) => (
-    <div className="board-row">
-        <div className="card counter card-color-r">
-            {counts && counts.r
-                ? counts.r
-                : 0}
-        </div>
-        <div className="card counter card-color-blank any-width">
-            cards remaining
-        </div>
-        <div className="card counter card-color-b">
-            {counts && counts.b
-                ? counts.b
-                : 0}
-        </div>
-    </div>
-);
 
 class Game extends React.Component {
     constructor(props) {
@@ -185,11 +167,12 @@ class Game extends React.Component {
         const fullArray = redArray.concat(blueArray, whiteArray, blackArray);
         // apply random seed before shuffling the Array
         Math.seedrandom(randomSeed);
+        const newCardColors = _.shuffle(fullArray);
         this.setState({
-            cardColors: _.shuffle(fullArray),
+            cardColors: newCardColors,
             words: wordsSelected,
         });
-        this.updateBoard();
+        this.updateBoard(newCardColors);
     };
 
     toggleHeaderHide = () => {
@@ -199,13 +182,12 @@ class Game extends React.Component {
         });
     };
 
-    updateBoard = () => {
+    updateBoard = (cardColors = this.state.cardColors) => {
         const {
             xIsNext,
             cardClicked,
             history,
             stepNumber,
-            cardColors,
         } = this.state;
         // get current board
         const historySlice = history.slice(0, stepNumber + 1);
@@ -296,49 +278,14 @@ class Game extends React.Component {
             <div>
                 <div className="game">
                     {/* make header its own container */}
-                    <header className={`hiding-box ${headerIsHidden ? 'hiding-box-hidden' : ''}`}>
-                        <button
-                            type="button"
-                            className="hide-button"
-                            onClick={this.toggleHeaderHide}
-                        />
-                        <div className="utility-row">
-                            <div className="utilities-box">
-                                <p>Game code</p>
-                                <input
-                                    name="randomSeed"
-                                    value={randomSeed}
-                                    className="input-elements"
-                                    onChange={this.handleInputChange}
-                                />
-                            </div>
-                            <div className="utilities-box">
-                                <button
-                                    type="button"
-                                    className="input-elements"
-                                    onClick={this.seedNewGame}
-                                >
-                            Refresh game
-                                </button>
-                            </div>
-                            <div className="utilities-box">
-                                <button
-                                    type="button"
-                                    className="input-elements"
-                                    onClick={() => this.showModal('REVEAL')}
-                                >
-                            REVEAL ALL
-                                </button>
-                                <button
-                                    type="button"
-                                    className="input-elements"
-                                    onClick={() => this.showModal('HIDE')}
-                                >
-                            HIDE ALL
-                                </button>
-                            </div>
-                        </div>
-                    </header>
+                    <Header
+                        randomSeed={randomSeed}
+                        headerIsHidden={headerIsHidden}
+                        toggleHeaderHide={this.toggleHeaderHide}
+                        handleInputChange={this.handleInputChange}
+                        seedNewGame={this.seedNewGame}
+                        showModal={this.showModal}
+                    />
                     <Board
                         words={words}
                         cardIDs={cardIDs}
@@ -374,13 +321,5 @@ class Game extends React.Component {
     }
 }
 
-CardCounter.propTypes = {
-    counts: PropTypes.shape({
-        r: PropTypes.number,
-        b: PropTypes.number,
-        k: PropTypes.number,
-        w: PropTypes.number,
-    }).isRequired,
-};
 
 export default Game;

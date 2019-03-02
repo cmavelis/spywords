@@ -39,7 +39,7 @@ const Header = ({
                 <button
                     type="button"
                     className="input-elements"
-                    onClick={() => showModal('Toggle Leader mode?')}
+                    onClick={() => showModal('leader_mode')}
                 >
                     LEADER MODE
                 </button>

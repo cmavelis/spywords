@@ -181,6 +181,13 @@ class Game extends React.Component {
         });
     };
 
+    enterLeaderMode = () => {
+        this.setState({
+            leaderMode: true,
+            cardShownStatus: Array(25).fill(true),
+        });
+    };
+
     updateBoard = (cardColors = this.state.cardColors) => {
         const {
             cardClicked,
@@ -256,9 +263,13 @@ class Game extends React.Component {
                         cardClicked={cardClicked}
                         wordClicked={words[cardClicked]}
                     >
-                        <p>
-                            {cardShownStatus[cardClicked] ? 'Hide card?' : 'Reveal card?'}
-                        </p>
+                        {cardClicked === 'leader-toggle'
+                            ? ()
+                            :
+                            <p>
+                                {cardShownStatus[cardClicked] ? 'Hide card?' : 'Reveal card?'}
+                            </p>
+                        }
                     </Modal>
                 </div>
             </div>

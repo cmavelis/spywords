@@ -7,8 +7,10 @@ function Card(props) {
         status,
         value,
         color,
+        leaderMark,
     } = props;
-    const cls = `card ${status ? `card-color-${color}` : ''}`;
+    const cls = `card${status ? ` card-color-${color}` : ''}
+        ${leaderMark ? ' card-leader-mark' : ''}`;
     return (
         <button type="button" className={cls} onClick={onClick}>
             {value}
@@ -23,6 +25,7 @@ class Board extends React.Component {
             onClick,
             squares,
             cardColors,
+            cardLeaderMarks,
         } = this.props;
         return (
             <Card
@@ -31,6 +34,7 @@ class Board extends React.Component {
                 onClick={() => onClick(i)}
                 status={squares[i]}
                 color={cardColors[i]}
+                leaderMark={cardLeaderMarks[i]}
             />
         );
     }

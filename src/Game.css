@@ -115,6 +115,13 @@ p {
     color:white
 }
 
+.card-leader-mark {
+    border-color: cyan;
+   /*url(*/
+/*data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAkAAAAJCAYAAADgkQYQAAAAQUlEQVQoU2NkYGD4z4AAjEhsOBMkCFOEVQFIHqYIpwKQcbgkQXJwZ+A1AeooRmyKMDyCrgirT5EV4QwKmCK8YQUA9ToLBy+JKFgAAAAASUVORK5CYII=*/
+    /*) repeat;*/
+}
+
 .card:focus {
     outline: none;
 }

@@ -7,7 +7,6 @@ const Header = ({
     headerIsHidden,
     toggleHeaderHide,
     handleInputChange,
-    seedNewGame,
     showModal,
 }) => (
     <header className={`hiding-box ${headerIsHidden ? 'hiding-box-hidden' : ''}`}>
@@ -25,15 +24,6 @@ const Header = ({
                     className="input-elements"
                     onChange={handleInputChange}
                 />
-            </div>
-            <div className="utilities-box">
-                <button
-                    type="button"
-                    className="input-elements"
-                    onClick={seedNewGame}
-                >
-                    Refresh game
-                </button>
             </div>
             <div className="utilities-box">
                 <button

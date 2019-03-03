@@ -125,7 +125,9 @@ class Game extends React.Component {
 
     handleInputChange = (e) => {
         const { name, value } = e.target;
-        this.setState({ [name]: value.toLowerCase() });
+        const newSeed = value.toLowerCase();
+        this.setState({ [name]: newSeed });
+        this.seedNewGame(newSeed);
     };
 
     getRandomWord = (wordObject) => {
@@ -133,8 +135,8 @@ class Game extends React.Component {
         return wordList[Math.floor(Math.random() * listLength)];
     };
 
-    seedNewGame = () => {
-        let { randomSeed } = this.state;
+    seedNewGame = (newSeed) => {
+        let randomSeed = newSeed;
         const { wordList, listLength } = wordFiles.cardsClassic;
         const today = new Date();
         const todayValue = today.getUTCFullYear().toString()
@@ -249,7 +251,6 @@ class Game extends React.Component {
                         headerIsHidden={headerIsHidden}
                         toggleHeaderHide={this.toggleHeaderHide}
                         handleInputChange={this.handleInputChange}
-                        seedNewGame={this.seedNewGame}
                         showModal={this.showModal}
                     />
                     <Board

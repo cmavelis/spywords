@@ -43,7 +43,6 @@ Header.propTypes = {
     headerIsHidden: PropTypes.bool.isRequired,
     toggleHeaderHide: PropTypes.func.isRequired,
     handleInputChange: PropTypes.func.isRequired,
-    seedNewGame: PropTypes.func.isRequired,
     showModal: PropTypes.func.isRequired,
 };
 

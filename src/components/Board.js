@@ -44,7 +44,7 @@ class Board extends React.Component {
         return (
             <div className="game-board">
                 {cardIDs.map((row, i) => (
-                    <div className="board-row" key={`row ${i}`}>
+                    <div className="board-row" key={row.id}>
                         {row.map((card, j) => this.renderCard(i * 5 + j))}
                     </div>
                 ))}
@@ -59,11 +59,13 @@ Board.propTypes = {
     squares: PropTypes.arrayOf(PropTypes.bool).isRequired,
     cardIDs: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.number)).isRequired,
     cardColors: PropTypes.arrayOf(PropTypes.string).isRequired,
+    cardLeaderMarks: PropTypes.arrayOf(PropTypes.bool).isRequired,
 };
 Card.propTypes = {
     onClick: PropTypes.func.isRequired,
     status: PropTypes.bool.isRequired,
     value: PropTypes.string.isRequired,
     color: PropTypes.string.isRequired,
+    leaderMark: PropTypes.bool.isRequired,
 };
 export default Board;

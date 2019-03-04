@@ -59,7 +59,7 @@ const getWords = () => {
         });
 };
 
-const promiseGetWords = new Promise((succeed, fail) => {
+const promiseGetWords = new Promise((succeed) => {
     succeed(getWords());
 });
 
@@ -106,10 +106,6 @@ class Game extends React.Component {
         }
         promiseGetWords.then(this.seedNewGame)
             .catch(err => console.log(`There was an error:${err}`));
-    }
-
-    componentDidUpdate() {
-
     }
 
     showModal = (cardID) => {
@@ -208,7 +204,11 @@ class Game extends React.Component {
             return prevState;
         });
         this.setState(prevState => (
-            { counts: _.countBy(prevState.cardColors.filter((cc, i) => !prevState.cardShownStatus[i])) }
+            {
+                counts: _.countBy(prevState.cardColors.filter(
+                    (cc, i) => !prevState.cardShownStatus[i],
+                )),
+            }
         ));
     };
 

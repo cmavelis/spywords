@@ -1,4 +1,5 @@
 import _ from 'underscore';
+import axios from 'axios';
 import React from 'react';
 import Board from './components/Board';
 import CardCounter from './components/CardCounter';
@@ -7,61 +8,6 @@ import Modal from './components/Modal';
 import './Game.css';
 import 'seedrandom';
 
-
-const getWordList = (fileName) => {
-    // populate wordList from adjacent file
-    let wordsReceived = '';
-    const xhr = new XMLHttpRequest();
-    xhr.onload = () => {
-        if (xhr.readyState === xhr.DONE) {
-            if (xhr.status === 200) {
-                wordsReceived = xhr.responseText;
-            }
-        }
-    };
-    xhr.open('GET', fileName, false);
-    xhr.send(null);
-
-    const wordList = wordsReceived.split(/\r?\n/);
-    const listLength = wordList.length - 1;
-    return [wordList, listLength];
-};
-
-const wordFiles = {
-    cardsClassic: {
-        filename: 'words_classic.csv',
-        wordList: [],
-        listLength: 0,
-    },
-    cardsSimple: {
-        filename: 'words_simple.csv',
-        wordList: [],
-        listLength: 0,
-    },
-    seedAdjectives: {
-        filename: 'seed_adjectives.csv',
-        wordList: [],
-        listLength: 0,
-    },
-    seedNouns: {
-        filename: 'seed_nouns.csv',
-        wordList: [],
-        listLength: 0,
-    },
-};
-
-const getWords = () => {
-    Object.keys(wordFiles)
-        .forEach((key) => {
-            const [wordList, listLength] = getWordList(wordFiles[key].filename);
-            wordFiles[key].wordList = wordList;
-            wordFiles[key].listLength = listLength;
-        });
-};
-
-const promiseGetWords = new Promise((succeed) => {
-    succeed(getWords());
-});
 
 // hard-coded cardColors grid
 // 9 for 1st team, 8 for 2nd team
@@ -90,23 +36,71 @@ class Game extends React.Component {
             headerIsHidden: false,
             leaderMode: false,
             cardLeaderMarks: Array(25).fill(false),
+            wordFiles: {
+                cardsClassic: 'words_classic.csv',
+                cardsSimple: 'words_simple.csv',
+                seedAdjectives: 'seed_adjectives.csv',
+                seedNouns: 'seed_nouns.csv',
+            },
         };
     }
 
     // seedNewWords should go in the constructor I think
     componentDidMount() {
-        const { randomSeed } = this.state;
-        if (randomSeed === '1') {
-            Math.seedrandom(Date.now());
-            const randomAdjective = this.getRandomWord(wordFiles.seedAdjectives);
-            const randomNoun = this.getRandomWord(wordFiles.seedNouns);
-            this.setState(
-                { randomSeed: `${randomAdjective} ${randomNoun}` },
-            );
-        }
-        promiseGetWords.then(this.seedNewGame)
-            .catch(err => console.log(`There was an error:${err}`));
+        const { randomSeed, wordFiles } = this.state;
+
+        this.getWordData();
+        // if (randomSeed === '1') {
+        //     Math.seedrandom(Date.now());
+        //     const randomAdjective = this.getRandomWord(wordFiles.seedAdjectives);
+        //     const randomNoun = this.getRandomWord(wordFiles.seedNouns);
+        //     const newSeed = `${randomAdjective} ${randomNoun}`;
+        //     this.setState(
+        //         { randomSeed: newSeed },
+        //     );
+        // }
+
+        // .then(this.seedNewGame())
+        // promiseGetWords.then(this.seedNewGame)
+        //     .catch(err => console.log(`There was an error:${err}`));
     }
+
+    getWordData = () => {
+        const newWordFiles = {};
+        const { wordFiles } = this.state;
+        Object.entries(wordFiles)
+            .forEach(([fieldName, fileName]) => {
+                console.log(fileName);
+                axios.get(fileName)
+                    .then((wordsReceived) => {
+                        const wordList = wordsReceived.data.split(/\r?\n/);
+                        // console.log(wordList)
+                        const listLength = wordList.length - 1;
+                        return {
+                            // fileName,
+                            wordList,
+                            listLength,
+                        };
+                    })
+                    .then((wordData) => {
+                        this.setState(prevState => ({
+                            wordFiles: {
+                                ...prevState.wordFiles,
+                                [fieldName]: {
+                                    wordData,
+                                },
+                            },
+                        }));
+                        newWordFiles[fieldName] = wordData;
+                    })
+                    .catch(error => this.setState({ error, isLoading: false }));
+            });
+        this.setState({
+            // wordFiles: newWordFiles,
+            isLoading: false,
+        },
+            console.log('state is update'));
+    };
 
     showModal = (cardID) => {
         this.setState({
@@ -133,6 +127,7 @@ class Game extends React.Component {
 
     seedNewGame = (newSeed) => {
         let randomSeed = newSeed;
+        const { wordFiles } = this.state;
         const { wordList, listLength } = wordFiles.cardsClassic;
         const today = new Date();
         const todayValue = today.getUTCFullYear().toString()

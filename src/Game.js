@@ -64,7 +64,7 @@ class Game extends React.Component {
     componentDidUpdate() {
         const { wordFiles, randomSeed } = this.state;
 
-        if (!randomSeed && !Object.entries(wordFiles).some(([objName, content]) => content.isLoading)) {
+        if (!randomSeed) { if (!Object.entries(wordFiles).some(([objName, content]) => content.isLoading)) {
             Math.seedrandom(Date.now());
             const randomAdjective = this.getRandomWord(wordFiles.seedAdjectives);
             const randomNoun = this.getRandomWord(wordFiles.seedNouns);
@@ -73,6 +73,7 @@ class Game extends React.Component {
                 { randomSeed: newSeed },
             );
             this.seedNewGame(newSeed)
+            }
         }
     }
 

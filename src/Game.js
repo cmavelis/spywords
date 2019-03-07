@@ -31,75 +31,80 @@ class Game extends React.Component {
             cardShownStatus: Array(25).fill(false),
             modalShown: false,
             cardClicked: null,
-            randomSeed: '1',
+            randomSeed: null,
             counts: _.countBy(cardColorsSample),
             headerIsHidden: false,
             leaderMode: false,
             cardLeaderMarks: Array(25).fill(false),
             wordFiles: {
-                cardsClassic: 'words_classic.csv',
-                cardsSimple: 'words_simple.csv',
-                seedAdjectives: 'seed_adjectives.csv',
-                seedNouns: 'seed_nouns.csv',
+                cardsClassic: {
+                    fileName: 'words_classic.csv',
+                    isLoading: true,
+                },
+                cardsSimple: {
+                    fileName: 'words_simple.csv',
+                    isLoading: true,
+                },
+                seedAdjectives: {
+                    fileName: 'seed_adjectives.csv',
+                    isLoading: true,
+                },
+                seedNouns: {
+                    fileName: 'seed_nouns.csv',
+                    isLoading: true,
+                },
             },
         };
     }
 
-    // seedNewWords should go in the constructor I think
     componentDidMount() {
-        const { randomSeed, wordFiles } = this.state;
-
         this.getWordData();
-        // if (randomSeed === '1') {
-        //     Math.seedrandom(Date.now());
-        //     const randomAdjective = this.getRandomWord(wordFiles.seedAdjectives);
-        //     const randomNoun = this.getRandomWord(wordFiles.seedNouns);
-        //     const newSeed = `${randomAdjective} ${randomNoun}`;
-        //     this.setState(
-        //         { randomSeed: newSeed },
-        //     );
-        // }
+    }
 
-        // .then(this.seedNewGame())
-        // promiseGetWords.then(this.seedNewGame)
-        //     .catch(err => console.log(`There was an error:${err}`));
+    componentDidUpdate() {
+        const { wordFiles, randomSeed } = this.state;
+
+        if (!randomSeed && !Object.entries(wordFiles).some(([objName, content]) => content.isLoading)) {
+            Math.seedrandom(Date.now());
+            const randomAdjective = this.getRandomWord(wordFiles.seedAdjectives);
+            const randomNoun = this.getRandomWord(wordFiles.seedNouns);
+            const newSeed = `${randomAdjective} ${randomNoun}`;
+            this.setState(
+                { randomSeed: newSeed },
+            );
+            this.seedNewGame(newSeed)
+        }
     }
 
     getWordData = () => {
-        const newWordFiles = {};
         const { wordFiles } = this.state;
         Object.entries(wordFiles)
-            .forEach(([fieldName, fileName]) => {
-                console.log(fileName);
+            .forEach(([objTitle, objContent]) => {
+                const { fileName } = objContent;
                 axios.get(fileName)
                     .then((wordsReceived) => {
                         const wordList = wordsReceived.data.split(/\r?\n/);
-                        // console.log(wordList)
                         const listLength = wordList.length - 1;
                         return {
-                            // fileName,
                             wordList,
                             listLength,
+                            isLoading: false,
                         };
                     })
                     .then((wordData) => {
-                        this.setState(prevState => ({
+                        this.setState((prevState) => ({
                             wordFiles: {
                                 ...prevState.wordFiles,
-                                [fieldName]: {
+                                [objTitle]:
                                     wordData,
-                                },
                             },
-                        }));
-                        newWordFiles[fieldName] = wordData;
+                        }))
                     })
                     .catch(error => this.setState({ error, isLoading: false }));
             });
         this.setState({
-            // wordFiles: newWordFiles,
             isLoading: false,
-        },
-            console.log('state is update'));
+        });
     };
 
     showModal = (cardID) => {

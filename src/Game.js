@@ -27,7 +27,6 @@ class Game extends React.Component {
         this.state = {
             words: Array(25).fill('-'),
             cardColors: cardColorsSample,
-            cardIDs: [0, 1, 2, 3, 4].map(i => Array(5).fill(i)),
             cardShownStatus: Array(25).fill(false),
             modalShown: false,
             cardClicked: null,
@@ -235,7 +234,6 @@ class Game extends React.Component {
         const {
             cardShownStatus,
             words,
-            cardIDs,
             cardColors,
             modalShown,
             cardClicked,
@@ -257,7 +255,6 @@ class Game extends React.Component {
                     />
                     <Board
                         words={words}
-                        cardIDs={cardIDs}
                         squares={cardShownStatus}
                         onClick={this.showModal}
                         modalClick={this.handleCardToggle}

@@ -1,11 +1,8 @@
 import _ from 'underscore';
-import axios from 'axios';
 import React from 'react';
 import Board from './components/Board';
 import CardCounter from './components/CardCounter';
-import Header from './components/Header';
 import Modal from './components/Modal';
-import './Game.css';
 import 'seedrandom';
 
 
@@ -30,29 +27,8 @@ class Game extends React.Component {
             cardShownStatus: Array(25).fill(false),
             modalShown: false,
             cardClicked: null,
-            randomSeed: null,
             counts: _.countBy(cardColorsSample),
-            headerIsHidden: false,
-            leaderMode: false,
             cardLeaderMarks: Array(25).fill(false),
-            wordFiles: {
-                cardsClassic: {
-                    fileName: 'words_classic.csv',
-                    isLoading: true,
-                },
-                cardsSimple: {
-                    fileName: 'words_simple.csv',
-                    isLoading: true,
-                },
-                seedAdjectives: {
-                    fileName: 'seed_adjectives.csv',
-                    isLoading: true,
-                },
-                seedNouns: {
-                    fileName: 'seed_nouns.csv',
-                    isLoading: true,
-                },
-            },
         };
     }
 
@@ -77,36 +53,7 @@ class Game extends React.Component {
         }
     }
 
-    getWordData = () => {
-        const { wordFiles } = this.state;
-        Object.entries(wordFiles)
-            .forEach(([objTitle, objContent]) => {
-                const { fileName } = objContent;
-                axios.get(fileName)
-                    .then((wordsReceived) => {
-                        const wordList = wordsReceived.data.split(/\r?\n/);
-                        const listLength = wordList.length - 1;
-                        return {
-                            wordList,
-                            listLength,
-                            isLoading: false,
-                        };
-                    })
-                    .then((wordData) => {
-                        this.setState(prevState => ({
-                            wordFiles: {
-                                ...prevState.wordFiles,
-                                [objTitle]:
-                                    wordData,
-                            },
-                        }));
-                    })
-                    .catch(error => this.setState({ error, isLoading: false }));
-            });
-        this.setState({
-            isLoading: false,
-        });
-    };
+
 
     showModal = (cardID) => {
         this.setState({
@@ -246,13 +193,6 @@ class Game extends React.Component {
         return (
             <div>
                 <div className="game">
-                    <Header
-                        randomSeed={randomSeed}
-                        headerIsHidden={headerIsHidden}
-                        toggleHeaderHide={this.toggleHeaderHide}
-                        handleInputChange={this.handleInputChange}
-                        showModal={this.showModal}
-                    />
                     <Board
                         words={words}
                         squares={cardShownStatus}

@@ -64,15 +64,16 @@ class Game extends React.Component {
     componentDidUpdate() {
         const { wordFiles, randomSeed } = this.state;
 
-        if (!randomSeed) { if (!Object.entries(wordFiles).some(([objName, content]) => content.isLoading)) {
-            Math.seedrandom(Date.now());
-            const randomAdjective = this.getRandomWord(wordFiles.seedAdjectives);
-            const randomNoun = this.getRandomWord(wordFiles.seedNouns);
-            const newSeed = `${randomAdjective} ${randomNoun}`;
-            this.setState(
-                { randomSeed: newSeed },
-            );
-            this.seedNewGame(newSeed)
+        if (!randomSeed) {
+            if (!Object.entries(wordFiles).some(obj => obj[1].isLoading)) {
+                Math.seedrandom(Date.now());
+                const randomAdjective = this.getRandomWord(wordFiles.seedAdjectives);
+                const randomNoun = this.getRandomWord(wordFiles.seedNouns);
+                const newSeed = `${randomAdjective} ${randomNoun}`;
+                this.setState(
+                    { randomSeed: newSeed },
+                );
+                this.seedNewGame(newSeed);
             }
         }
     }
@@ -93,13 +94,13 @@ class Game extends React.Component {
                         };
                     })
                     .then((wordData) => {
-                        this.setState((prevState) => ({
+                        this.setState(prevState => ({
                             wordFiles: {
                                 ...prevState.wordFiles,
                                 [objTitle]:
                                     wordData,
                             },
-                        }))
+                        }));
                     })
                     .catch(error => this.setState({ error, isLoading: false }));
             });

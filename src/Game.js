@@ -59,7 +59,7 @@ const getWords = () => {
         });
 };
 
-const promiseGetWords = new Promise((succeed, fail) => {
+const promiseGetWords = new Promise((succeed) => {
     succeed(getWords());
 });
 
@@ -82,16 +82,14 @@ class Game extends React.Component {
             words: Array(25).fill(''),
             cardColors: cardColorsSample,
             cardIDs: [0, 1, 2, 3, 4].map(i => Array(5).fill(i)),
-            history: [{
-                squares: Array(25).fill(false),
-            }],
-            xIsNext: true,
-            stepNumber: 0,
+            cardShownStatus: Array(25).fill(false),
             modalShown: false,
             cardClicked: null,
             randomSeed: '1',
             counts: _.countBy(cardColorsSample),
             headerIsHidden: false,
+            leaderMode: false,
+            cardLeaderMarks: Array(25).fill(false),
         };
     }
 
@@ -123,7 +121,9 @@ class Game extends React.Component {
 
     handleInputChange = (e) => {
         const { name, value } = e.target;
-        this.setState({ [name]: value.toLowerCase() });
+        const newSeed = value.toLowerCase();
+        this.setState({ [name]: newSeed });
+        this.seedNewGame(newSeed);
     };
 
     getRandomWord = (wordObject) => {
@@ -131,8 +131,8 @@ class Game extends React.Component {
         return wordList[Math.floor(Math.random() * listLength)];
     };
 
-    seedNewGame = () => {
-        let { randomSeed } = this.state;
+    seedNewGame = (newSeed) => {
+        let randomSeed = newSeed;
         const { wordList, listLength } = wordFiles.cardsClassic;
         const today = new Date();
         const todayValue = today.getUTCFullYear().toString()
@@ -171,6 +171,7 @@ class Game extends React.Component {
         this.setState({
             cardColors: newCardColors,
             words: wordsSelected,
+            leaderMode: false,
         });
         this.updateBoard(newCardColors);
     };
@@ -182,61 +183,65 @@ class Game extends React.Component {
         });
     };
 
-    updateBoard = (cardColors = this.state.cardColors) => {
-        const {
-            xIsNext,
-            cardClicked,
-            history,
-            stepNumber,
-        } = this.state;
-        // get current board
-        const historySlice = history.slice(0, stepNumber + 1);
-        const current = historySlice[historySlice.length - 1];
-        const squares = current.squares.slice();
-
+    updateBoard = () => {
         // change revealed status of clicked card
-        // if LEADER, reveal all
-        if (cardClicked === 'REVEAL') {
-            squares.fill(true);
-        } if (cardClicked === 'HIDE') {
-            squares.fill(false);
-        } if (!_.isNaN(cardClicked)) {
-            squares[cardClicked] = !squares[cardClicked];
-        }
+        // if LEADER, mark instead of reveal, since all will be revealed
 
         // update state
-        this.setState({
-            xIsNext: !xIsNext,
-            history: historySlice.concat([{
-                squares,
-                whoMoved: xIsNext ? 'X' : 'O',
-                moveLocation: [Math.floor(cardClicked / 5), cardClicked % 5],
-            }]),
-            stepNumber: historySlice.length,
-            counts: _.countBy(cardColors.filter((cc, i) => !squares[i])),
+        this.setState((prevState) => {
+            const prevClick = prevState.cardClicked;
+            let updateArray;
+            if (!_.isNaN(prevClick)) {
+                if (prevState.leaderMode) {
+                    updateArray = prevState.cardLeaderMarks;
+                    updateArray[prevClick] = !updateArray[prevClick];
+                    return { cardLeaderMarks: updateArray };
+                }
+                updateArray = prevState.cardShownStatus;
+                updateArray[prevClick] = !updateArray[prevClick];
+                return { cardShownStatus: updateArray };
+            }
+            return prevState;
         });
+        this.setState(prevState => (
+            {
+                counts: _.countBy(prevState.cardColors.filter(
+                    (cc, i) => !prevState.cardShownStatus[i],
+                )),
+            }
+        ));
     };
 
     handleCardToggle = () => {
+        this.setState((prevState) => {
+            if (prevState.cardClicked === 'leader_mode') {
+                return {
+                    leaderMode: true,
+                    cardShownStatus: Array(25)
+                        .fill(true),
+                };
+            }
+            return {
+                prevState,
+            };
+        });
         this.updateBoard();
         this.hideModal();
     };
 
     render() {
         const {
-            history,
+            cardShownStatus,
             words,
             cardIDs,
             cardColors,
-            stepNumber,
             modalShown,
             cardClicked,
             counts,
             randomSeed,
             headerIsHidden,
+            cardLeaderMarks,
         } = this.state;
-        const current = history[stepNumber];
-        const squares = current.squares.slice();
 
         return (
             <div>
@@ -246,16 +251,16 @@ class Game extends React.Component {
                         headerIsHidden={headerIsHidden}
                         toggleHeaderHide={this.toggleHeaderHide}
                         handleInputChange={this.handleInputChange}
-                        seedNewGame={this.seedNewGame}
                         showModal={this.showModal}
                     />
                     <Board
                         words={words}
                         cardIDs={cardIDs}
-                        squares={current.squares}
+                        squares={cardShownStatus}
                         onClick={this.showModal}
                         modalClick={this.handleCardToggle}
                         cardColors={cardColors}
+                        cardLeaderMarks={cardLeaderMarks}
                     />
                     <CardCounter
                         counts={counts}
@@ -269,9 +274,18 @@ class Game extends React.Component {
                         cardClicked={cardClicked}
                         wordClicked={words[cardClicked]}
                     >
-                        <p>
-                            {squares[cardClicked] ? 'Hide card?' : 'Reveal card?'}
-                        </p>
+                        {cardClicked === 'leader_mode'
+                            ? (
+                                <p>
+                                    Turn on leader mode?
+                                </p>
+                            )
+                            : (
+                                <p>
+                                    {cardShownStatus[cardClicked] ? 'Hide card?' : 'Reveal card?'}
+                                </p>
+                            )
+                        }
                     </Modal>
                 </div>
             </div>

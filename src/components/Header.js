@@ -7,7 +7,6 @@ const Header = ({
     headerIsHidden,
     toggleHeaderHide,
     handleInputChange,
-    seedNewGame,
     showModal,
 }) => (
     <header className={`hiding-box ${headerIsHidden ? 'hiding-box-hidden' : ''}`}>
@@ -30,25 +29,9 @@ const Header = ({
                 <button
                     type="button"
                     className="input-elements"
-                    onClick={seedNewGame}
+                    onClick={() => showModal('leader_mode')}
                 >
-                    Refresh game
-                </button>
-            </div>
-            <div className="utilities-box">
-                <button
-                    type="button"
-                    className="input-elements"
-                    onClick={() => showModal('REVEAL')}
-                >
-                    REVEAL ALL
-                </button>
-                <button
-                    type="button"
-                    className="input-elements"
-                    onClick={() => showModal('HIDE')}
-                >
-                    HIDE ALL
+                    LEADER MODE
                 </button>
             </div>
         </div>
@@ -60,7 +43,6 @@ Header.propTypes = {
     headerIsHidden: PropTypes.bool.isRequired,
     toggleHeaderHide: PropTypes.func.isRequired,
     handleInputChange: PropTypes.func.isRequired,
-    seedNewGame: PropTypes.func.isRequired,
     showModal: PropTypes.func.isRequired,
 };
 

@@ -18,11 +18,10 @@ class GameLoader extends React.Component {
     constructor(props) {
         super(props);
         this.setSeed = this.setSeed.bind(this);
-        // this.randomizeSeed = this.randomizeSeed.bind(this);
         this.state = {
             randomSeed: '',
             headerIsHidden: false,
-            // leaderMode: false,
+            leaderMode: false,
             wordFiles: {
                 cardsClassic: {
                     fileName: 'words_classic.csv',

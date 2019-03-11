@@ -19,9 +19,9 @@ class GameLoader extends React.Component {
         super(props);
         this.setSeed = this.setSeed.bind(this);
         this.state = {
-            randomSeed: null,
+            randomSeed: '',
             headerIsHidden: false,
-            leaderMode: false,
+            // leaderMode: false,
             wordFiles: {
                 cardsClassic: {
                     fileName: 'words_classic.csv',
@@ -71,7 +71,7 @@ class GameLoader extends React.Component {
                             },
                         }));
                     })
-                    .catch(error => this.setState({ error }));
+                    // .catch(error => this.setState({ error }));
             });
     };
 

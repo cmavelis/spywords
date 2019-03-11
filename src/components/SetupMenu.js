@@ -20,6 +20,7 @@ const SetupMenu = ({
                 <p>Game code</p>
                 <input
                     name="randomSeed"
+                    type="text"
                     value={randomSeed}
                     className="input-elements"
                     onChange={handleInputChange}

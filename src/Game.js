@@ -1,5 +1,6 @@
 import _ from 'underscore';
 import React from 'react';
+import PropTypes from 'prop-types';
 import Board from './components/Board';
 import CardCounter from './components/CardCounter';
 import Modal from './components/Modal';
@@ -49,22 +50,6 @@ class Game extends React.Component {
         if (prevProps.randomSeed !== randomSeed) {
             this.seedNewGame(randomSeed);
         }
-
-        // const { randomSeed } = this.props;
-        // if (randomSeed) { this.seedNewGame(randomSeed); }
-
-        // if (!randomSeed) {
-        //     if (!Object.entries(wordFiles).some(obj => obj[1].isLoading)) {
-        //         Math.seedrandom(Date.now());
-        //         const randomAdjective = this.getRandomWord(wordFiles.seedAdjectives);
-        //         const randomNoun = this.getRandomWord(wordFiles.seedNouns);
-        //         const newSeed = `${randomAdjective} ${randomNoun}`;
-        //         this.setState(
-        //             { randomSeed: newSeed },
-        //         );
-        //         this.seedNewGame(newSeed);
-        //     }
-        // }
     }
 
     showModal = (cardID) => {
@@ -228,5 +213,10 @@ class Game extends React.Component {
     }
 }
 
+Game.propTypes = {
+    setSeed: PropTypes.func.isRequired,
+    wordFiles: PropTypes.arrayOf(PropTypes.string).isRequired,
+    randomSeed: PropTypes.string.isRequired,
+};
 
 export default Game;

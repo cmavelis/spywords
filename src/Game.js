@@ -39,10 +39,22 @@ class Game extends React.Component {
     }
 
     componentDidUpdate(prevProps) {
-        const { randomSeed } = this.props;
+        const { randomSeed, leaderMode } = this.props;
         console.log('game updated');
         if (prevProps.randomSeed !== randomSeed) {
             this.seedNewGame(randomSeed);
+        }
+        if (prevProps.leaderMode !== leaderMode) {
+            if (leaderMode) {
+                this.setState({
+                    cardShownStatus: Array(25).fill(leaderMode),
+                });
+            } else {
+                this.setState({
+                    cardShownStatus: Array(25).fill(leaderMode),
+                    cardLeaderMarks: Array(25).fill(false),
+                });
+            }
         }
     }
 
@@ -108,13 +120,14 @@ class Game extends React.Component {
         this.setState({
             cardColors: newCardColors,
             words: wordsSelected,
-            leaderMode: false,
             cardShownStatus: Array(25).fill(false),
+            cardLeaderMarks: Array(25).fill(false),
         });
         this.updateCounter();
     };
 
     updateBoard = () => {
+        const { leaderMode } = this.props;
         // change revealed status of clicked card
         // if LEADER, mark instead of reveal, since all will be revealed
 
@@ -123,10 +136,14 @@ class Game extends React.Component {
             const prevClick = prevState.cardClicked;
             let updateArray;
             if (!_.isNaN(prevClick)) {
-                if (prevState.leaderMode) {
+                if (leaderMode) {
                     updateArray = prevState.cardLeaderMarks;
                     updateArray[prevClick] = !updateArray[prevClick];
-                    return { cardLeaderMarks: updateArray };
+                    return {
+                        cardLeaderMarks: updateArray,
+                        cardShownStatus: Array(25)
+                            .fill(true),
+                    };
                 }
                 updateArray = prevState.cardShownStatus;
                 updateArray[prevClick] = !updateArray[prevClick];
@@ -211,6 +228,7 @@ Game.propTypes = {
     generateNewSeed: PropTypes.func.isRequired,
     wordFile: PropTypes.arrayOf(PropTypes.string).isRequired,
     randomSeed: PropTypes.string.isRequired,
+    leaderMode: PropTypes.bool.isRequired,
 };
 
 export default Game;

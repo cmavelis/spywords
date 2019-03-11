@@ -103,11 +103,16 @@ class GameLoader extends React.Component {
          this.setState(prevState => ({ headerIsHidden: !prevState.headerIsHidden }));
      };
 
+     toggleLeaderMode = () => {
+         this.setState(prevState => ({ leaderMode: !prevState.leaderMode }));
+     };
+
      render() {
          const {
              randomSeed,
              headerIsHidden,
              wordFiles,
+             leaderMode,
          } = this.state;
 
          return (
@@ -123,6 +128,7 @@ class GameLoader extends React.Component {
                                      randomSeed={randomSeed}
                                      headerIsHidden={headerIsHidden}
                                      toggleHeaderHide={this.toggleHeaderHide}
+                                     toggleLeaderMode={this.toggleLeaderMode}
                                      handleInputChange={this.handleInputChange}
                                      showModal={this.showModal}
                                      generateNewSeed={this.generateNewSeed}
@@ -132,6 +138,7 @@ class GameLoader extends React.Component {
                                  randomSeed={randomSeed}
                                  wordFile={wordFiles.cardsClassic}
                                  generateNewSeed={this.generateNewSeed}
+                                 leaderMode={leaderMode}
                              />
                          </div>
                      )

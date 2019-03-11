@@ -6,8 +6,8 @@ const SetupMenu = ({
     randomSeed,
     headerIsHidden,
     toggleHeaderHide,
+    toggleLeaderMode,
     handleInputChange,
-    showModal,
     generateNewSeed,
 }) => (
     <header className={`hiding-box ${headerIsHidden ? 'hiding-box-hidden' : ''}`}>
@@ -42,7 +42,7 @@ const SetupMenu = ({
                 <button
                     type="button"
                     className="input-elements"
-                    onClick={() => showModal('leader_mode')}
+                    onClick={() => toggleLeaderMode()}
                 >
                     Leader Mode
                 </button>
@@ -56,7 +56,7 @@ SetupMenu.propTypes = {
     headerIsHidden: PropTypes.bool.isRequired,
     toggleHeaderHide: PropTypes.func.isRequired,
     handleInputChange: PropTypes.func.isRequired,
-    showModal: PropTypes.func.isRequired,
+    toggleLeaderMode: PropTypes.func.isRequired,
     generateNewSeed: PropTypes.func.isRequired,
 };
 

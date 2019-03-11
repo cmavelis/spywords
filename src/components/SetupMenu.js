@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 
-const Header = ({
+const SetupMenu = ({
     randomSeed,
     headerIsHidden,
     toggleHeaderHide,
@@ -38,7 +38,7 @@ const Header = ({
     </header>
 );
 
-Header.propTypes = {
+SetupMenu.propTypes = {
     randomSeed: PropTypes.string.isRequired,
     headerIsHidden: PropTypes.bool.isRequired,
     toggleHeaderHide: PropTypes.func.isRequired,
@@ -46,4 +46,4 @@ Header.propTypes = {
     showModal: PropTypes.func.isRequired,
 };
 
-export default Header;
+export default SetupMenu;

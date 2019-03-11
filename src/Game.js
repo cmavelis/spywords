@@ -33,27 +33,39 @@ class Game extends React.Component {
     }
 
     componentDidMount() {
-        this.getWordData();
+        console.log('game mounted');
+        const { wordFiles, setSeed } = this.props;
+        Math.seedrandom(Date.now());
+        const randomAdjective = this.getRandomWord(wordFiles.seedAdjectives);
+        const randomNoun = this.getRandomWord(wordFiles.seedNouns);
+        const newSeed = `${randomAdjective} ${randomNoun}`;
+        setSeed(newSeed);
+        this.seedNewGame(newSeed);
     }
 
-    componentDidUpdate() {
-        const { wordFiles, randomSeed } = this.state;
-
-        if (!randomSeed) {
-            if (!Object.entries(wordFiles).some(obj => obj[1].isLoading)) {
-                Math.seedrandom(Date.now());
-                const randomAdjective = this.getRandomWord(wordFiles.seedAdjectives);
-                const randomNoun = this.getRandomWord(wordFiles.seedNouns);
-                const newSeed = `${randomAdjective} ${randomNoun}`;
-                this.setState(
-                    { randomSeed: newSeed },
-                );
-                this.seedNewGame(newSeed);
-            }
+    componentDidUpdate(prevProps) {
+        const { randomSeed } = this.props;
+        console.log('game updated');
+        if (prevProps.randomSeed !== randomSeed) {
+            this.seedNewGame(randomSeed);
         }
+
+        // const { randomSeed } = this.props;
+        // if (randomSeed) { this.seedNewGame(randomSeed); }
+
+        // if (!randomSeed) {
+        //     if (!Object.entries(wordFiles).some(obj => obj[1].isLoading)) {
+        //         Math.seedrandom(Date.now());
+        //         const randomAdjective = this.getRandomWord(wordFiles.seedAdjectives);
+        //         const randomNoun = this.getRandomWord(wordFiles.seedNouns);
+        //         const newSeed = `${randomAdjective} ${randomNoun}`;
+        //         this.setState(
+        //             { randomSeed: newSeed },
+        //         );
+        //         this.seedNewGame(newSeed);
+        //     }
+        // }
     }
-
-
 
     showModal = (cardID) => {
         this.setState({
@@ -66,13 +78,6 @@ class Game extends React.Component {
         this.setState({ modalShown: false, cardClicked: undefined });
     };
 
-    handleInputChange = (e) => {
-        const { name, value } = e.target;
-        const newSeed = value.toLowerCase();
-        this.setState({ [name]: newSeed });
-        this.seedNewGame(newSeed);
-    };
-
     getRandomWord = (wordObject) => {
         const { wordList, listLength } = wordObject;
         return wordList[Math.floor(Math.random() * listLength)];
@@ -80,7 +85,7 @@ class Game extends React.Component {
 
     seedNewGame = (newSeed) => {
         let randomSeed = newSeed;
-        const { wordFiles } = this.state;
+        const { wordFiles } = this.props;
         const { wordList, listLength } = wordFiles.cardsClassic;
         const today = new Date();
         const todayValue = today.getUTCFullYear().toString()
@@ -121,14 +126,7 @@ class Game extends React.Component {
             words: wordsSelected,
             leaderMode: false,
         });
-        this.updateBoard(newCardColors);
-    };
-
-    toggleHeaderHide = () => {
-        const { headerIsHidden } = this.state;
-        this.setState({
-            headerIsHidden: !headerIsHidden,
-        });
+        // this.updateBoard(newCardColors);
     };
 
     updateBoard = () => {
@@ -185,8 +183,6 @@ class Game extends React.Component {
             modalShown,
             cardClicked,
             counts,
-            randomSeed,
-            headerIsHidden,
             cardLeaderMarks,
         } = this.state;
 

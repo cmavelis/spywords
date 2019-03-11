@@ -34,14 +34,8 @@ class Game extends React.Component {
     }
 
     componentDidMount() {
-        console.log('game mounted');
-        const { wordFiles, setSeed } = this.props;
-        Math.seedrandom(Date.now());
-        const randomAdjective = this.getRandomWord(wordFiles.seedAdjectives);
-        const randomNoun = this.getRandomWord(wordFiles.seedNouns);
-        const newSeed = `${randomAdjective} ${randomNoun}`;
-        setSeed(newSeed);
-        this.seedNewGame(newSeed);
+        const { generateNewSeed } = this.props;
+        generateNewSeed();
     }
 
     componentDidUpdate(prevProps) {
@@ -63,15 +57,20 @@ class Game extends React.Component {
         this.setState({ modalShown: false, cardClicked: undefined });
     };
 
-    getRandomWord = (wordObject) => {
-        const { wordList, listLength } = wordObject;
-        return wordList[Math.floor(Math.random() * listLength)];
+    updateCounter = () => {
+        this.setState(prevState => (
+            {
+                counts: _.countBy(prevState.cardColors.filter(
+                    (cc, i) => !prevState.cardShownStatus[i],
+                )),
+            }
+        ));
     };
 
-    seedNewGame = (newSeed) => {
-        let randomSeed = newSeed;
-        const { wordFiles } = this.props;
-        const { wordList, listLength } = wordFiles.cardsClassic;
+    seedNewGame = () => {
+        let { randomSeed } = this.props;
+        const { wordFile } = this.props;
+        const { wordList, listLength } = wordFile;
         const today = new Date();
         const todayValue = today.getUTCFullYear().toString()
             + today.getUTCMonth() + today.getUTCDate();
@@ -110,8 +109,9 @@ class Game extends React.Component {
             cardColors: newCardColors,
             words: wordsSelected,
             leaderMode: false,
+            cardShownStatus: Array(25).fill(false),
         });
-        // this.updateBoard(newCardColors);
+        this.updateCounter();
     };
 
     updateBoard = () => {
@@ -134,13 +134,7 @@ class Game extends React.Component {
             }
             return prevState;
         });
-        this.setState(prevState => (
-            {
-                counts: _.countBy(prevState.cardColors.filter(
-                    (cc, i) => !prevState.cardShownStatus[i],
-                )),
-            }
-        ));
+        this.updateCounter();
     };
 
     handleCardToggle = () => {
@@ -214,8 +208,8 @@ class Game extends React.Component {
 }
 
 Game.propTypes = {
-    setSeed: PropTypes.func.isRequired,
-    wordFiles: PropTypes.arrayOf(PropTypes.string).isRequired,
+    generateNewSeed: PropTypes.func.isRequired,
+    wordFile: PropTypes.arrayOf(PropTypes.string).isRequired,
     randomSeed: PropTypes.string.isRequired,
 };
 

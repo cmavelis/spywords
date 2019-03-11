@@ -18,6 +18,7 @@ class GameLoader extends React.Component {
     constructor(props) {
         super(props);
         this.setSeed = this.setSeed.bind(this);
+        // this.randomizeSeed = this.randomizeSeed.bind(this);
         this.state = {
             randomSeed: '',
             headerIsHidden: false,
@@ -70,18 +71,32 @@ class GameLoader extends React.Component {
                                     wordData,
                             },
                         }));
-                    })
-                    // .catch(error => this.setState({ error }));
+                    });
+                // .catch(error => this.setState({ error }));
             });
+    };
+
+    handleInputChange = (e) => {
+        const { value } = e.target;
+        this.setSeed(value);
     };
 
     setSeed = (newSeed) => {
         this.setState({ randomSeed: newSeed.toLowerCase() });
     };
 
-    handleInputChange = (e) => {
-        const { value } = e.target;
-        this.setSeed(value);
+    getRandomWord = (wordObject) => {
+        const { wordList, listLength } = wordObject;
+        return wordList[Math.floor(Math.random() * listLength)];
+    };
+
+    generateNewSeed = () => {
+        const { wordFiles } = this.state;
+        Math.seedrandom(Date.now());
+        const randomAdjective = this.getRandomWord(wordFiles.seedAdjectives);
+        const randomNoun = this.getRandomWord(wordFiles.seedNouns);
+        const newSeed = `${randomAdjective} ${randomNoun}`;
+        this.setSeed(newSeed);
     };
 
      toggleHeaderHide = () => {
@@ -103,17 +118,20 @@ class GameLoader extends React.Component {
                      )
                      : (
                          <div>
-                             <SetupMenu
-                                 randomSeed={randomSeed}
-                                 headerIsHidden={headerIsHidden}
-                                 toggleHeaderHide={this.toggleHeaderHide}
-                                 handleInputChange={this.handleInputChange}
-                                 showModal={this.showModal}
-                             />
+                             <div className="game">
+                                 <SetupMenu
+                                     randomSeed={randomSeed}
+                                     headerIsHidden={headerIsHidden}
+                                     toggleHeaderHide={this.toggleHeaderHide}
+                                     handleInputChange={this.handleInputChange}
+                                     showModal={this.showModal}
+                                     generateNewSeed={this.generateNewSeed}
+                                 />
+                             </div>
                              <Game
                                  randomSeed={randomSeed}
-                                 wordFiles={wordFiles}
-                                 setSeed={this.setSeed}
+                                 wordFile={wordFiles.cardsClassic}
+                                 generateNewSeed={this.generateNewSeed}
                              />
                          </div>
                      )

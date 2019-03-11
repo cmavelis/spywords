@@ -8,6 +8,7 @@ const SetupMenu = ({
     toggleHeaderHide,
     handleInputChange,
     showModal,
+    generateNewSeed,
 }) => (
     <header className={`hiding-box ${headerIsHidden ? 'hiding-box-hidden' : ''}`}>
         <button
@@ -17,7 +18,9 @@ const SetupMenu = ({
         />
         <div className="utility-row">
             <div className="utilities-box">
-                <p>Game code</p>
+                <p>Game code:</p>
+            </div>
+            <div className="utilities-box">
                 <input
                     name="randomSeed"
                     type="text"
@@ -30,9 +33,18 @@ const SetupMenu = ({
                 <button
                     type="button"
                     className="input-elements"
+                    onClick={() => generateNewSeed()}
+                >
+                    New Code
+                </button>
+            </div>
+            <div className="utilities-box">
+                <button
+                    type="button"
+                    className="input-elements"
                     onClick={() => showModal('leader_mode')}
                 >
-                    LEADER MODE
+                    Leader Mode
                 </button>
             </div>
         </div>
@@ -45,6 +57,7 @@ SetupMenu.propTypes = {
     toggleHeaderHide: PropTypes.func.isRequired,
     handleInputChange: PropTypes.func.isRequired,
     showModal: PropTypes.func.isRequired,
+    generateNewSeed: PropTypes.func.isRequired,
 };
 
 export default SetupMenu;

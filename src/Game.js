@@ -89,6 +89,7 @@ class Game extends React.Component {
         if (randomSeed !== 'test') {
             randomSeed = todayValue + randomSeed;
         }
+        randomSeed = randomSeed.replace(/\s+/g, '');
         Math.seedrandom(randomSeed);
         // select sample of words using seed, ignoring repeats
         const wordsSelected = [];

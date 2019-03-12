@@ -226,7 +226,7 @@ class Game extends React.Component {
 
 Game.propTypes = {
     generateNewSeed: PropTypes.func.isRequired,
-    wordFile: PropTypes.arrayOf(PropTypes.string).isRequired,
+    wordFile: PropTypes.object.isRequired,
     randomSeed: PropTypes.string.isRequired,
     leaderMode: PropTypes.bool.isRequired,
 };

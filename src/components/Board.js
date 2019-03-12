@@ -45,7 +45,7 @@ class Board extends React.Component {
         return (
             <div className="game-board">
                 {cardIDs.map((row, i) => (
-                    <div className="board-row" key={row.id}>
+                    <div className="board-row" key={i}>
                         {row.map((card, j) => this.renderCard(i * 5 + j))}
                     </div>
                 ))}

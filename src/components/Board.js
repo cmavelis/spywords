@@ -41,7 +41,7 @@ class Board extends React.Component {
     }
 
     render() {
-        const { cardIDs } = this.props;
+        const cardIDs = [0, 1, 2, 3, 4].map(i => Array(5).fill(i)); // TODO: simplify into a range
         return (
             <div className="game-board">
                 {cardIDs.map((row, i) => (
@@ -58,7 +58,6 @@ Board.propTypes = {
     onClick: PropTypes.func.isRequired,
     words: PropTypes.arrayOf(PropTypes.string).isRequired,
     squares: PropTypes.arrayOf(PropTypes.bool).isRequired,
-    cardIDs: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.number)).isRequired,
     cardColors: PropTypes.arrayOf(PropTypes.string).isRequired,
     cardLeaderMarks: PropTypes.arrayOf(PropTypes.bool).isRequired,
 };

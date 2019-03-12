@@ -2,12 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 
-const Header = ({
+const SetupMenu = ({
     randomSeed,
     headerIsHidden,
     toggleHeaderHide,
+    toggleLeaderMode,
     handleInputChange,
-    showModal,
+    generateNewSeed,
 }) => (
     <header className={`hiding-box ${headerIsHidden ? 'hiding-box-hidden' : ''}`}>
         <button
@@ -17,9 +18,12 @@ const Header = ({
         />
         <div className="utility-row">
             <div className="utilities-box">
-                <p>Game code</p>
+                <p>Game code:</p>
+            </div>
+            <div className="utilities-box">
                 <input
                     name="randomSeed"
+                    type="text"
                     value={randomSeed}
                     className="input-elements"
                     onChange={handleInputChange}
@@ -29,21 +33,31 @@ const Header = ({
                 <button
                     type="button"
                     className="input-elements"
-                    onClick={() => showModal('leader_mode')}
+                    onClick={() => generateNewSeed()}
                 >
-                    LEADER MODE
+                    New Code
+                </button>
+            </div>
+            <div className="utilities-box">
+                <button
+                    type="button"
+                    className="input-elements"
+                    onClick={() => toggleLeaderMode()}
+                >
+                    Leader Mode
                 </button>
             </div>
         </div>
     </header>
 );
 
-Header.propTypes = {
+SetupMenu.propTypes = {
     randomSeed: PropTypes.string.isRequired,
     headerIsHidden: PropTypes.bool.isRequired,
     toggleHeaderHide: PropTypes.func.isRequired,
     handleInputChange: PropTypes.func.isRequired,
-    showModal: PropTypes.func.isRequired,
+    toggleLeaderMode: PropTypes.func.isRequired,
+    generateNewSeed: PropTypes.func.isRequired,
 };
 
-export default Header;
+export default SetupMenu;

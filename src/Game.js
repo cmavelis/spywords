@@ -1,11 +1,9 @@
 import _ from 'underscore';
-import axios from 'axios';
 import React from 'react';
+import PropTypes from 'prop-types';
 import Board from './components/Board';
 import CardCounter from './components/CardCounter';
-import Header from './components/Header';
 import Modal from './components/Modal';
-import './Game.css';
 import 'seedrandom';
 
 
@@ -27,87 +25,38 @@ class Game extends React.Component {
         this.state = {
             words: Array(25).fill('-'),
             cardColors: cardColorsSample,
-            cardIDs: [0, 1, 2, 3, 4].map(i => Array(5).fill(i)),
             cardShownStatus: Array(25).fill(false),
             modalShown: false,
             cardClicked: null,
-            randomSeed: null,
             counts: _.countBy(cardColorsSample),
-            headerIsHidden: false,
-            leaderMode: false,
             cardLeaderMarks: Array(25).fill(false),
-            wordFiles: {
-                cardsClassic: {
-                    fileName: 'words_classic.csv',
-                    isLoading: true,
-                },
-                cardsSimple: {
-                    fileName: 'words_simple.csv',
-                    isLoading: true,
-                },
-                seedAdjectives: {
-                    fileName: 'seed_adjectives.csv',
-                    isLoading: true,
-                },
-                seedNouns: {
-                    fileName: 'seed_nouns.csv',
-                    isLoading: true,
-                },
-            },
         };
     }
 
     componentDidMount() {
-        this.getWordData();
+        const { generateNewSeed } = this.props;
+        generateNewSeed();
     }
 
-    componentDidUpdate() {
-        const { wordFiles, randomSeed } = this.state;
-
-        if (!randomSeed) {
-            if (!Object.entries(wordFiles).some(obj => obj[1].isLoading)) {
-                Math.seedrandom(Date.now());
-                const randomAdjective = this.getRandomWord(wordFiles.seedAdjectives);
-                const randomNoun = this.getRandomWord(wordFiles.seedNouns);
-                const newSeed = `${randomAdjective} ${randomNoun}`;
-                this.setState(
-                    { randomSeed: newSeed },
-                );
-                this.seedNewGame(newSeed);
+    componentDidUpdate(prevProps) {
+        const { randomSeed, leaderMode } = this.props;
+        console.log('game updated');
+        if (prevProps.randomSeed !== randomSeed) {
+            this.seedNewGame(randomSeed);
+        }
+        if (prevProps.leaderMode !== leaderMode) {
+            if (leaderMode) {
+                this.setState({
+                    cardShownStatus: Array(25).fill(leaderMode),
+                });
+            } else {
+                this.setState({
+                    cardShownStatus: Array(25).fill(leaderMode),
+                    cardLeaderMarks: Array(25).fill(false),
+                });
             }
         }
     }
-
-    getWordData = () => {
-        const { wordFiles } = this.state;
-        Object.entries(wordFiles)
-            .forEach(([objTitle, objContent]) => {
-                const { fileName } = objContent;
-                axios.get(fileName)
-                    .then((wordsReceived) => {
-                        const wordList = wordsReceived.data.split(/\r?\n/);
-                        const listLength = wordList.length - 1;
-                        return {
-                            wordList,
-                            listLength,
-                            isLoading: false,
-                        };
-                    })
-                    .then((wordData) => {
-                        this.setState(prevState => ({
-                            wordFiles: {
-                                ...prevState.wordFiles,
-                                [objTitle]:
-                                    wordData,
-                            },
-                        }));
-                    })
-                    .catch(error => this.setState({ error, isLoading: false }));
-            });
-        this.setState({
-            isLoading: false,
-        });
-    };
 
     showModal = (cardID) => {
         this.setState({
@@ -120,22 +69,20 @@ class Game extends React.Component {
         this.setState({ modalShown: false, cardClicked: undefined });
     };
 
-    handleInputChange = (e) => {
-        const { name, value } = e.target;
-        const newSeed = value.toLowerCase();
-        this.setState({ [name]: newSeed });
-        this.seedNewGame(newSeed);
+    updateCounter = () => {
+        this.setState(prevState => (
+            {
+                counts: _.countBy(prevState.cardColors.filter(
+                    (cc, i) => !prevState.cardShownStatus[i],
+                )),
+            }
+        ));
     };
 
-    getRandomWord = (wordObject) => {
-        const { wordList, listLength } = wordObject;
-        return wordList[Math.floor(Math.random() * listLength)];
-    };
-
-    seedNewGame = (newSeed) => {
-        let randomSeed = newSeed;
-        const { wordFiles } = this.state;
-        const { wordList, listLength } = wordFiles.cardsClassic;
+    seedNewGame = () => {
+        let { randomSeed } = this.props;
+        const { wordFile } = this.props;
+        const { wordList, listLength } = wordFile;
         const today = new Date();
         const todayValue = today.getUTCFullYear().toString()
             + today.getUTCMonth() + today.getUTCDate();
@@ -173,19 +120,14 @@ class Game extends React.Component {
         this.setState({
             cardColors: newCardColors,
             words: wordsSelected,
-            leaderMode: false,
+            cardShownStatus: Array(25).fill(false),
+            cardLeaderMarks: Array(25).fill(false),
         });
-        this.updateBoard(newCardColors);
-    };
-
-    toggleHeaderHide = () => {
-        const { headerIsHidden } = this.state;
-        this.setState({
-            headerIsHidden: !headerIsHidden,
-        });
+        this.updateCounter();
     };
 
     updateBoard = () => {
+        const { leaderMode } = this.props;
         // change revealed status of clicked card
         // if LEADER, mark instead of reveal, since all will be revealed
 
@@ -194,10 +136,14 @@ class Game extends React.Component {
             const prevClick = prevState.cardClicked;
             let updateArray;
             if (!_.isNaN(prevClick)) {
-                if (prevState.leaderMode) {
+                if (leaderMode) {
                     updateArray = prevState.cardLeaderMarks;
                     updateArray[prevClick] = !updateArray[prevClick];
-                    return { cardLeaderMarks: updateArray };
+                    return {
+                        cardLeaderMarks: updateArray,
+                        cardShownStatus: Array(25)
+                            .fill(true),
+                    };
                 }
                 updateArray = prevState.cardShownStatus;
                 updateArray[prevClick] = !updateArray[prevClick];
@@ -205,13 +151,7 @@ class Game extends React.Component {
             }
             return prevState;
         });
-        this.setState(prevState => (
-            {
-                counts: _.countBy(prevState.cardColors.filter(
-                    (cc, i) => !prevState.cardShownStatus[i],
-                )),
-            }
-        ));
+        this.updateCounter();
     };
 
     handleCardToggle = () => {
@@ -235,29 +175,18 @@ class Game extends React.Component {
         const {
             cardShownStatus,
             words,
-            cardIDs,
             cardColors,
             modalShown,
             cardClicked,
             counts,
-            randomSeed,
-            headerIsHidden,
             cardLeaderMarks,
         } = this.state;
 
         return (
             <div>
                 <div className="game">
-                    <Header
-                        randomSeed={randomSeed}
-                        headerIsHidden={headerIsHidden}
-                        toggleHeaderHide={this.toggleHeaderHide}
-                        handleInputChange={this.handleInputChange}
-                        showModal={this.showModal}
-                    />
                     <Board
                         words={words}
-                        cardIDs={cardIDs}
                         squares={cardShownStatus}
                         onClick={this.showModal}
                         modalClick={this.handleCardToggle}
@@ -295,5 +224,11 @@ class Game extends React.Component {
     }
 }
 
+Game.propTypes = {
+    generateNewSeed: PropTypes.func.isRequired,
+    wordFile: PropTypes.arrayOf(PropTypes.string).isRequired,
+    randomSeed: PropTypes.string.isRequired,
+    leaderMode: PropTypes.bool.isRequired,
+};
 
 export default Game;

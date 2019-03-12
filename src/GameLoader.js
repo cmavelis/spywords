@@ -2,7 +2,6 @@ import React from 'react';
 import axios from 'axios';
 import Game from './Game';
 import SetupMenu from './components/SetupMenu';
-import './GameContext.css';
 
 
 // const loadedGame = (props) => {

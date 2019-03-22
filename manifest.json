@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "SPYwords",
+  "name": "Spywords game",
   "icons": [
     {
       "src": "favicon.ico",
@@ -9,7 +9,7 @@
     }
   ],
   "start_url": "./index.html",
-  "display": "fullscreen",
-  "theme_color": "#000000",
-  "background_color": "#ffffff"
+  "display": "standalone",
+  "theme_color": "#384d48",
+  "background_color": "#384d48"
 }

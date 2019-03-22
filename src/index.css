@@ -8,7 +8,7 @@
 
 body {
     font-family: 'Acme', sans-serif;
-    margin: 20px;
+    margin: 20px 20px 0;
     background: var(--main-bg-color);
 }
 
@@ -81,7 +81,7 @@ p {
     line-height: 34px;
     /*height: 10%;*/
     margin: 5px;
-    padding: 0.8vw 1vw;
+    padding: 0.4vw 1vw;
     text-align: center;
     width: 20%;
     /*max-width: 200px;*/

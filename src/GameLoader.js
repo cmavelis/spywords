@@ -95,14 +95,19 @@ class GameLoader extends React.Component {
         const randomNoun = this.getRandomWord(wordFiles.seedNouns);
         const newSeed = `${randomAdjective} ${randomNoun}`;
         this.setSeed(newSeed);
+        this.toggleLeaderMode(false);
     };
 
      toggleHeaderHide = () => {
          this.setState(prevState => ({ headerIsHidden: !prevState.headerIsHidden }));
      };
 
-     toggleLeaderMode = () => {
-         this.setState(prevState => ({ leaderMode: !prevState.leaderMode }));
+     toggleLeaderMode = (force = null) => {
+         if (force !== null) {
+             this.setState({ leaderMode: force });
+         } else {
+             this.setState(prevState => ({ leaderMode: !prevState.leaderMode }));
+         }
      };
 
      render() {
@@ -117,7 +122,7 @@ class GameLoader extends React.Component {
              <div>
                  {Object.entries(wordFiles).some(obj => obj[1].isLoading)
                      ? (
-                         <p> Loading... </p>
+                         <div className="card counter card-color-blank"> Loading... </div>
                      )
                      : (
                          <div>

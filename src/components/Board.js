@@ -10,7 +10,7 @@ function Card(props) {
         leaderMark,
     } = props;
     const cls = `card${status ? ` card-color-${color}` : ''}
-        ${leaderMark ? ' card-leader-mark' : ''}`;
+        ${leaderMark ? ' card-leader-mark ' : ''}`;
     const smallerFontClass = value.length > 8 ? 'card-smaller-font' : '';
     return (
         <button type="button" className={cls + smallerFontClass} onClick={onClick}>

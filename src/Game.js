@@ -40,17 +40,16 @@ class Game extends React.Component {
 
     componentDidUpdate(prevProps) {
         const { randomSeed, leaderMode } = this.props;
-        console.log('game updated');
         if (prevProps.randomSeed !== randomSeed) {
             this.seedNewGame(randomSeed);
         }
         if (prevProps.leaderMode !== leaderMode) {
-            if (leaderMode) {
-                this.setState({
+            if (leaderMode) { // TODO: find alternative to setState here, avoid double render too
+                this.setState({ // eslint-disable-line
                     cardShownStatus: Array(25).fill(leaderMode),
                 });
             } else {
-                this.setState({
+                this.setState({ // eslint-disable-line
                     cardShownStatus: Array(25).fill(leaderMode),
                     cardLeaderMarks: Array(25).fill(false),
                 });
@@ -227,7 +226,7 @@ class Game extends React.Component {
 
 Game.propTypes = {
     generateNewSeed: PropTypes.func.isRequired,
-    wordFile: PropTypes.object.isRequired,
+    wordFile: PropTypes.objectOf(PropTypes.any).isRequired,
     randomSeed: PropTypes.string.isRequired,
     leaderMode: PropTypes.bool.isRequired,
 };

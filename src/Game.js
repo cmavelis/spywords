@@ -185,6 +185,9 @@ class Game extends React.Component {
         return (
             <div>
                 <div className="game">
+                    <CardCounter
+                        counts={counts}
+                    />
                     <Board
                         words={words}
                         squares={cardShownStatus}
@@ -192,9 +195,6 @@ class Game extends React.Component {
                         modalClick={this.handleCardToggle}
                         cardColors={cardColors}
                         cardLeaderMarks={cardLeaderMarks}
-                    />
-                    <CardCounter
-                        counts={counts}
                     />
                 </div>
                 <div>

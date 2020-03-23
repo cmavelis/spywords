@@ -1,14 +1,14 @@
 :root {
-    --main-bg-color:#384d48;
-    --palette-red:#db5a69;
-    --palette-blue:#5bafd9;
-    --card-bg-color:#ffeecf;
-    --card-border:#999
+    --main-bg-color: #374142;
+    --palette-red: #d2694c;
+    --palette-blue: #006494;
+    --card-bg-color: #94c0c2;
+    --card-border: #69a4a2;
 }
 
 body {
     font-family: 'Acme', sans-serif;
-    margin: 20px 20px 0;
+    margin: 20px 8vw 0;
     background: var(--main-bg-color);
 }
 
@@ -73,14 +73,14 @@ p {
 
 .card {
     background: var(--card-bg-color);
-    border: 6px solid var(--card-border);
-    border-radius: 10px;
+    border: none;
+    border-radius: 18px;
     /*float: left;*/
-    font-size: 2.2vw;
+    font-size: 2vw;
     font-weight: bold;
     line-height: 34px;
     /*height: 10%;*/
-    margin: 5px;
+    margin: 6px;
     padding: 0.4vw 1vw;
     text-align: center;
     width: 20%;
@@ -94,8 +94,12 @@ p {
     font-size: 1.9vw;
 }
 
+.card-color-w, .card-color-k, .card-color-b, .card-color-r {
+    border: none;
+}
+
 .card-color-w {
-    background: gray;
+    background: var(--card-border);
     color: white;
 }
 
@@ -115,8 +119,9 @@ p {
 }
 
 .card-color-blank {
-    background: var(--main-bg-color);
-    color:white
+    background: #fff;
+    color: black;
+    padding: 5px 15px;
 }
 
 .card-leader-mark {
@@ -131,7 +136,12 @@ p {
 }
 
 .counter {
-    border-width: 1px;
+    border: none;
+    font-size: 22px;
+}
+
+.counter-row {
+    margin: 15px 0;
 }
 
 .any-width {

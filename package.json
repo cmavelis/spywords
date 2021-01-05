@@ -4,7 +4,7 @@
   "private": true,
   "homepage": "http://cmavelis.github.io/spywords",
   "dependencies": {
-    "axios": "^0.18.0",
+    "axios": "^0.21.1",
     "merge": "^1.2.1",
     "npm": "^6.4.1",
     "prop-types": "^15.6.2",

@@ -1,6 +1,6 @@
 :root {
     --main-bg-color:#384d48;
-    --palette-red:#db5a69;
+    --palette-red:#cc2b4b;
     --palette-blue:#5bafd9;
     --card-bg-color:#ffeecf;
     --card-border:#999
@@ -97,7 +97,7 @@ p {
 }
 
 .card-color-w {
-    background: gray;
+    background: var(--main-bg-color);
     color: white;
 }
 

@@ -142,6 +142,7 @@ class GameLoader extends React.Component {
                                  wordFile={wordFiles.cardsClassic}
                                  generateNewSeed={this.generateNewSeed}
                                  leaderMode={leaderMode}
+                                 toggleLeaderMode={this.toggleLeaderMode}
                              />
                          </div>
                      )

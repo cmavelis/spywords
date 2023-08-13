@@ -80,7 +80,7 @@ class Game extends React.Component {
 
     seedNewGame = () => {
         let { randomSeed } = this.props;
-        const { wordFile } = this.props;
+        const { wordFile, toggleLeaderMode } = this.props;
         const { wordList, listLength } = wordFile;
         const today = new Date();
         const todayValue = today.getUTCFullYear().toString()
@@ -117,6 +117,7 @@ class Game extends React.Component {
         // apply random seed before shuffling the Array
         Math.seedrandom(randomSeed);
         const newCardColors = _.shuffle(fullArray);
+        toggleLeaderMode(false);
         this.setState({
             cardColors: newCardColors,
             words: wordsSelected,
@@ -229,6 +230,7 @@ Game.propTypes = {
     wordFile: PropTypes.objectOf(PropTypes.any).isRequired,
     randomSeed: PropTypes.string.isRequired,
     leaderMode: PropTypes.bool.isRequired,
+    toggleLeaderMode: PropTypes.func.isRequired,
 };
 
 export default Game;

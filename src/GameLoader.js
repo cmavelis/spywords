@@ -30,6 +30,10 @@ class GameLoader extends React.Component {
                     fileName: 'words_simple.csv',
                     isLoading: true,
                 },
+                cardsBaby: {
+                    fileName: 'words_baby.csv',
+                    isLoading: true,
+                },
                 seedAdjectives: {
                     fileName: 'seed_adjectives.csv',
                     isLoading: true,
@@ -110,46 +114,52 @@ class GameLoader extends React.Component {
          }
      };
 
-     render() {
-         const {
-             randomSeed,
-             headerIsHidden,
-             wordFiles,
-             leaderMode,
-         } = this.state;
+    getWordFileByQueryParam = () => {
+        const { wordFiles } = this.state;
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get('mode') === 'baby' ? wordFiles.cardsBaby : wordFiles.cardsClassic;
+    };
 
-         return (
-             <div>
-                 {Object.entries(wordFiles).some(obj => obj[1].isLoading)
-                     ? (
-                         <div className="card counter card-color-blank"> Loading... </div>
-                     )
-                     : (
-                         <div>
-                             <div className="game">
-                                 <SetupMenu
-                                     randomSeed={randomSeed}
-                                     headerIsHidden={headerIsHidden}
-                                     toggleHeaderHide={this.toggleHeaderHide}
-                                     toggleLeaderMode={this.toggleLeaderMode}
-                                     handleInputChange={this.handleInputChange}
-                                     showModal={this.showModal}
-                                     generateNewSeed={this.generateNewSeed}
-                                 />
-                             </div>
-                             <Game
-                                 randomSeed={randomSeed}
-                                 wordFile={wordFiles.cardsClassic}
-                                 generateNewSeed={this.generateNewSeed}
-                                 leaderMode={leaderMode}
-                                 toggleLeaderMode={this.toggleLeaderMode}
-                             />
-                         </div>
-                     )
-                 }
-             </div>
-         );
-     }
+    render() {
+        const {
+            randomSeed,
+            headerIsHidden,
+            wordFiles,
+            leaderMode,
+        } = this.state;
+
+        return (
+            <div>
+                {Object.entries(wordFiles).some(obj => obj[1].isLoading)
+                    ? (
+                        <div className="card counter card-color-blank"> Loading... </div>
+                    )
+                    : (
+                        <div>
+                            <div className="game">
+                                <SetupMenu
+                                    randomSeed={randomSeed}
+                                    headerIsHidden={headerIsHidden}
+                                    toggleHeaderHide={this.toggleHeaderHide}
+                                    toggleLeaderMode={this.toggleLeaderMode}
+                                    handleInputChange={this.handleInputChange}
+                                    showModal={this.showModal}
+                                    generateNewSeed={this.generateNewSeed}
+                                />
+                            </div>
+                            <Game
+                                randomSeed={randomSeed}
+                                wordFile={this.getWordFileByQueryParam()}
+                                generateNewSeed={this.generateNewSeed}
+                                leaderMode={leaderMode}
+                                toggleLeaderMode={this.toggleLeaderMode}
+                            />
+                        </div>
+                    )
+                }
+            </div>
+        );
+    }
 }
 
 export default GameLoader;
